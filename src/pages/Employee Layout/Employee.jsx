@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router";
-import logoImg from '../../assets/logo.png'
+import { Link, NavLink, Outlet } from "react-router";
+import logoImg from "../../assets/logo.png";
+import { FaUsers } from "react-icons/fa6";
 
-const Dashboard = () => {
+const Employee = () => {
   return (
     <div>
       <div className="drawer lg:drawer-open">
@@ -16,26 +17,27 @@ const Dashboard = () => {
               className="btn btn-square btn-ghost"
             >
               {/* Sidebar toggle icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                  fill="none"
-                  stroke="currentColor"
-                  className="my-1.5 inline-block size-4"
-                >
-                  <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
-                  <path d="M9 4v16"></path>
-                  <path d="M14 10l2 2l-2 2"></path>
-                </svg>
-              
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                strokeWidth="2"
+                fill="none"
+                stroke="currentColor"
+                className="my-1.5 inline-block size-4"
+              >
+                <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                <path d="M9 4v16"></path>
+                <path d="M14 10l2 2l-2 2"></path>
+              </svg>
             </label>
             <div className="px-4">Navbar Title</div>
           </nav>
           {/* Page content here */}
-          <div className="p-4">Page Content</div>
+          <div className="p-4">
+            <Outlet />{" "}
+          </div>
         </div>
 
         <div className="drawer-side is-drawer-close:overflow-visible">
@@ -48,14 +50,16 @@ const Dashboard = () => {
             {/* Sidebar content here */}
             <ul className="menu w-full grow">
               {/* List item */}
+
               <li>
-                <Link to={"/"} className="-ml-3 my-4">
+                <Link to={"/"} className="-ml-3 my-4" data-tip="Homepage">
                   <img className="w-10 absolute" src={logoImg} alt="" />
                   <span className="is-drawer-close:hidden ml-9">Homepage</span>
                 </Link>
-                <Link to={`/dashboard`}
+                <Link
+                  to={`/dashboard`}
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Homepage"
+                  data-tip="Dashboard"
                 >
                   {/* Home icon */}
                   <svg
@@ -73,6 +77,16 @@ const Dashboard = () => {
                   </svg>
                   <span className="is-drawer-close:hidden">Dashboard</span>
                 </Link>
+              </li>
+              <li>
+                <NavLink
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="employeeList"
+                  to={`/dashboard/employeeList`}
+                >
+                  <FaUsers className="text-xl font-bold" />
+                  <span className="is-drawer-close:hidden">Employee List</span>
+                </NavLink>
               </li>
 
               {/* List item */}
@@ -108,4 +122,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Employee;

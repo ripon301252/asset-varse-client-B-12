@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoCloseSharp, IoLogInOutline } from "react-icons/io5";
 import { Link, NavLink } from "react-router";
@@ -6,9 +6,12 @@ import { toast } from "react-hot-toast";
 import Img from "../assets/logo.png";
 import ThemeToggle from "../Theme/ThemeToggle";
 import useAuth from "../Hooks/useAuth";
+import useRole from "../Hooks/useRole";
+
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
+  const { role, isLoading } = useRole(); // use the custom hook
   const [open, setOpen] = useState(false);
   const [avatarDropdown, setAvatarDropdown] = useState(false);
   const [showName, setShowName] = useState(false);
@@ -45,10 +48,18 @@ const Navbar = () => {
   // Employee Dropdown
   const employeeDropdown = (
     <>
-      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/myAssets">My Assets</Link>
-      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/my-team">My Team</Link>
-      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/request-asset">Request Asset</Link>
-      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/profile">Profile</Link>
+      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/myAssets">
+        My Assets
+      </Link>
+      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/my-team">
+        My Team
+      </Link>
+      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/request-asset">
+        Request Asset
+      </Link>
+      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/profile">
+        Profile
+      </Link>
       <button
         onClick={handleSignOut}
         className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-left w-full"
@@ -61,11 +72,21 @@ const Navbar = () => {
   // HR Dropdown
   const hrDropdown = (
     <>
-      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/assetList">Asset List</Link>
-      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/addAsset">Add Asset</Link>
-      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/allRequests">All Requests</Link>
-      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/profile">Profile</Link>
-      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/dashboard">Dashboard</Link>
+      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/assetList">
+        Asset List
+      </Link>
+      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/addAsset">
+        Add Asset
+      </Link>
+      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/allRequests">
+        All Requests
+      </Link>
+      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/profile">
+        Profile
+      </Link>
+      <Link className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700" to="/employeeList">
+        Employee List
+      </Link>
       <button
         onClick={handleSignOut}
         className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 w-full text-right cursor-pointer"
@@ -75,11 +96,13 @@ const Navbar = () => {
     </>
   );
 
+  // If loading, show nothing to prevent flicker
+  if (isLoading) return null;
+
   return (
     <nav className="bg-white dark:bg-gray-900 shadow sticky top-0 z-50 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-
           {/* Logo */}
           <Link
             to="/"
@@ -94,8 +117,8 @@ const Navbar = () => {
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-6">
             {publicLinks}
-            {user?.role === "employee" && employeeDropdown}
-            {user?.role === "hr" && hrDropdown}
+            {/* {user && role === "employee" && employeeDropdown}
+            {user && role === "hr" && hrDropdown} */}
           </div>
 
           {/* Theme + Avatar / Login */}
@@ -120,8 +143,8 @@ const Navbar = () => {
                 )}
 
                 {avatarDropdown && (
-                  <div className="absolute lg:-right-3 -right-12 mt-72 w-36  bg-white text-right dark:bg-gray-900 rounded-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
-                    {user.role === "employee" ? employeeDropdown : hrDropdown}
+                  <div className="absolute lg:-right-3 -right-12 mt-72 w-36 bg-white text-right dark:bg-gray-900 rounded-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
+                    {role === "employee" ? employeeDropdown : hrDropdown}
                   </div>
                 )}
               </div>
@@ -150,8 +173,8 @@ const Navbar = () => {
         <div className="md:hidden bg-white dark:bg-gray-900 shadow border-t border-gray-200 dark:border-gray-700 animate-slideDown">
           <div className="px-4 py-4 flex flex-col gap-3">
             {publicLinks}
-            {user?.role === "employee" && employeeDropdown}
-            {user?.role === "hr" && hrDropdown}
+            {/* {user && role === "employee" && employeeDropdown}
+            {user && role === "hr" && hrDropdown} */}
           </div>
         </div>
       )}

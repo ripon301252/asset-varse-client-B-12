@@ -1,12 +1,14 @@
 import React from "react";
 import useAuth from "../Hooks/useAuth";
 
-import useRoll from "../Hooks/useRoll";
-import Forbidden from "../Component/Fobidden";
 
-const AdminRoutes = ({ children }) => {
+
+import useRole from "../Hooks/useRole";
+import Forbidden from "../pages/Fobidden";
+
+const Employee = ({ children }) => {
   const { loading } = useAuth();
-  const { role, roleLoading } = useRoll();
+  const { role, roleLoading } = useRole();
   
 
   if (loading || roleLoading) {
@@ -17,11 +19,11 @@ const AdminRoutes = ({ children }) => {
     );
   }
 
-  if (role !== "admin") {
+  if (role !== "employee") {
     return <Forbidden></Forbidden>;
   }
 
   return children;
 };
 
-export default AdminRoutes;
+export default Employee;

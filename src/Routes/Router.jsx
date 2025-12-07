@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router";
 import Root from "../Layouts/Root";
 import Home from "../pages/Home/Home";
 import AuthLayout from "../AuthLayout/AuthLayout";
-import Login from "../AuthLayout/Login"
+import Login from "../AuthLayout/Login";
 import Register from "../AuthLayout/Register";
 import ResetPassword from "../AuthLayout/ResetPassword";
 import PrivateRouts from "./PrivateRouts";
@@ -12,12 +12,9 @@ import JoinAsHR from "../pages/Join as HR/JoinAsHR";
 import AssetList from "../pages/Asset List/AssetList";
 import AddAsset from "../pages/Add Asset/AddAsset";
 import AllRequest from "../pages/All Request/AllRequest";
-import Dashboard from "../pages/Employee List/Dashboard";
+import Employee from "../pages/Employee Layout/Employee";
 import RequestAsset from "../pages/RequestAsset";
-
-
-
-
+import EmployeeList from "../pages/Employee Layout/EmployeeList";
 
 export const router = createBrowserRouter([
   {
@@ -37,32 +34,40 @@ export const router = createBrowserRouter([
         element: <JoinAsHR />,
       },
       {
-        path: '/profile',
-        element: <PrivateRouts>
-          <MyProfile />
-        </PrivateRouts>
+        path: "/profile",
+        element: (
+          <PrivateRouts>
+            <MyProfile />
+          </PrivateRouts>
+        ),
       },
       {
-        path: '/assetList',
-        element: <PrivateRouts>
-          <AssetList />
-        </PrivateRouts>
+        path: "/assetList",
+        element: (
+          <PrivateRouts>
+            <AssetList />
+          </PrivateRouts>
+        ),
       },
       {
-        path: '/addAsset',
-        element: <PrivateRouts>
-          <AddAsset />
-        </PrivateRouts>
+        path: "/addAsset",
+        element: (
+          <PrivateRouts>
+            <AddAsset />
+          </PrivateRouts>
+        ),
       },
       {
-        path: '/requestAsset',
-        element: <RequestAsset />
+        path: "/requestAsset",
+        element: <RequestAsset />,
       },
       {
-        path: '/allRequests',
-        element: <PrivateRouts>
-          <AllRequest />
-        </PrivateRouts>
+        path: "/allRequests",
+        element: (
+          <PrivateRouts>
+            <AllRequest />
+          </PrivateRouts>
+        ),
       },
     ],
   },
@@ -72,11 +77,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/login",
-        element: <Login />
+        element: <Login />,
       },
       {
         path: "/register",
-        element: <Register />
+        element: <Register />,
       },
       {
         path: "/resetPassword",
@@ -85,10 +90,13 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: 'dashboard',
-    element: <Dashboard />,
+    path: "employee",
+    element: <Employee />,
     children: [
-      
-    ]
-  }
+      {
+        path: "employeeList",
+        element: <EmployeeList />,
+      },
+    ],
+  },
 ]);
