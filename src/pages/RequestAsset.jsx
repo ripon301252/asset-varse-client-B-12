@@ -1,12 +1,10 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import useAuth from "../Hooks/useAuth";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 
-
 const RequestAsset = () => {
-  const { user } = useAuth(); // get logged in user info
+  const { user } = useAuth();
   const {
     register,
     handleSubmit,
@@ -14,15 +12,22 @@ const RequestAsset = () => {
     formState: { errors },
   } = useForm();
   const [message, setMessage] = useState("");
+  const [assets, setAssets] = useState([]);
   const axiosSecure = useAxiosSecure();
+
+  // Load assets for dropdown
+  useEffect(() => {
+    axiosSecure
+      .get("/assets")
+      .then((res) => setAssets(res.data))
+      .catch((err) => console.error(err));
+  }, [axiosSecure]);
 
   const onSubmit = async (data) => {
     const newRequest = {
-      assetName: data.assetName,
+      assetId: data.assetId,
       quantity: Number(data.quantity),
       reason: data.reason,
-      status: "pending",
-      createdAt: new Date(),
       userName: user?.displayName || "Anonymous",
       email: user?.email || "unknown",
     };
@@ -52,17 +57,24 @@ const RequestAsset = () => {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Asset Name */}
+        {/* Asset Dropdown */}
         <div>
-          <label className="block mb-1 font-semibold">Asset Name</label>
-          <input
-            type="text"
-            placeholder="Enter asset name"
-            className={`input input-bordered w-full ${errors.assetName && "border-red-500"}`}
-            {...register("assetName", { required: "Asset name is required" })}
-          />
-          {errors.assetName && (
-            <p className="text-red-500 mt-1">{errors.assetName.message}</p>
+          <label className="block mb-1 font-semibold">Select Asset</label>
+          <select
+            className={`input input-bordered w-full ${
+              errors.assetId && "border-red-500"
+            }`}
+            {...register("assetId", { required: "Asset is required" })}
+          >
+            <option value="">-- Select Asset --</option>
+            {assets.map((a) => (
+              <option key={a._id} value={a._id}>
+                {a.name} (Available: {a.quantity})
+              </option>
+            ))}
+          </select>
+          {errors.assetId && (
+            <p className="text-red-500 mt-1">{errors.assetId.message}</p>
           )}
         </div>
 
@@ -71,8 +83,13 @@ const RequestAsset = () => {
           <label className="block mb-1 font-semibold">Quantity</label>
           <input
             type="number"
-            className={`input input-bordered w-full ${errors.quantity && "border-red-500"}`}
-            {...register("quantity", { required: "Quantity is required", min: 1 })}
+            className={`input input-bordered w-full ${
+              errors.quantity && "border-red-500"
+            }`}
+            {...register("quantity", {
+              required: "Quantity is required",
+              min: 1,
+            })}
           />
           {errors.quantity && (
             <p className="text-red-500 mt-1">{errors.quantity.message}</p>

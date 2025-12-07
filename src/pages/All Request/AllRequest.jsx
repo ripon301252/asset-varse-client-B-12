@@ -20,22 +20,24 @@ const AllRequests = () => {
     fetchRequests();
   }, []);
 
-  // Approve request → status update + asset quantity decrement
-  const handleApprove = async (reqId, assetName, qty) => {
-    try {
-      const res = await axiosSecure.put(`/asset_requests/${reqId}/approve`, {
-        assetName,
-        quantity: qty,
-      });
-      if (res.data.message) {
-        alert(res.data.message);
-        fetchRequests();
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Failed to approve request");
+ // Approve request → status update + asset quantity decrement
+const handleApprove = async (reqId) => {
+  try {
+    // ❗ body পাঠানো যাবে না
+    const res = await axiosSecure.put(`/asset_requests/${reqId}/approve`);
+
+    if (res.data.message) {
+      alert(res.data.message);
+      fetchRequests();
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Failed to approve request");
+  }
+};
+
+
+  
 
   // Reject request → just update status
   const handleReject = async (reqId) => {
@@ -89,7 +91,7 @@ const AllRequests = () => {
           <tbody>
             {requests.map((req, i) => (
               <tr key={req._id}>
-                <td>{i + 1}</td>
+                <th>{i + 1}</th>
                 <td>{req.userName}</td>
                 <td>{req.email}</td>
                 <td>{req.assetName}</td>
@@ -112,9 +114,7 @@ const AllRequests = () => {
                   {/* Approve */}
                   {req.status === "pending" && (
                     <button
-                      onClick={() =>
-                        handleApprove(req._id, req.assetName, req.quantity)
-                      }
+                      onClick={() => handleApprove(req._id)}
                       className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
                       title="Approve"
                     >
