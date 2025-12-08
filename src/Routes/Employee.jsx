@@ -1,15 +1,15 @@
 import React from "react";
 import useAuth from "../Hooks/useAuth";
 
-
-
 import useRole from "../Hooks/useRole";
 import Forbidden from "../pages/Fobidden";
 
 const Employee = ({ children }) => {
-  const { loading } = useAuth();
+  const { loading, user } = useAuth();
   const { role, roleLoading } = useRole();
-  
+
+  console.log("Logged in user:", user);
+  console.log("Fetched role:", role);
 
   if (loading || roleLoading) {
     return (
@@ -19,8 +19,8 @@ const Employee = ({ children }) => {
     );
   }
 
-  if (role !== "employee") {
-    return <Forbidden></Forbidden>;
+  if (!role || role.trim().toLowerCase() !== "employee") {
+    return <Forbidden />;
   }
 
   return children;

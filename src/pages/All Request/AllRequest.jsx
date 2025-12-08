@@ -3,6 +3,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { MdApproval } from "react-icons/md";
 import { TbPlayerEject } from "react-icons/tb";
 import { IoTrashOutline } from "react-icons/io5";
+import { Link } from "react-router";
 
 const AllRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -20,24 +21,21 @@ const AllRequests = () => {
     fetchRequests();
   }, []);
 
- // Approve request → status update + asset quantity decrement
-const handleApprove = async (reqId) => {
-  try {
-    // ❗ body পাঠানো যাবে না
-    const res = await axiosSecure.put(`/asset_requests/${reqId}/approve`);
+  // Approve request → status update + asset quantity decrement
+  const handleApprove = async (reqId) => {
+    try {
+      // ❗ body পাঠানো যাবে না
+      const res = await axiosSecure.put(`/asset_requests/${reqId}/approve`);
 
-    if (res.data.message) {
-      alert(res.data.message);
-      fetchRequests();
+      if (res.data.message) {
+        alert(res.data.message);
+        fetchRequests();
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to approve request");
     }
-  } catch (err) {
-    console.error(err);
-    alert("Failed to approve request");
-  }
-};
-
-
-  
+  };
 
   // Reject request → just update status
   const handleReject = async (reqId) => {
@@ -55,20 +53,24 @@ const handleApprove = async (reqId) => {
 
   // Delete request
   const handleDelete = async (reqId) => {
-    const confirmDelete = confirm("Are you sure you want to delete this request?");
-    if (!confirmDelete) return;
+  const confirmDelete = confirm("Are you sure you want to delete this request?");
+  if (!confirmDelete) return;
 
-    try {
-      const res = await axiosSecure.delete(`/asset_requests/${reqId}`);
-      if (res.data.deletedCount > 0) {
-        alert("Request deleted!");
-        fetchRequests();
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete request");
+  try {
+    const res = await axiosSecure.delete(`/asset_requests/${reqId}`);
+    // backend অনুযায়ী চেক
+    if (res.data.result?.deletedCount > 0) {
+      alert("Request deleted!");
+      fetchRequests(); // UI update
+    } else {
+      alert("Delete failed!");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Failed to delete request");
+  }
+};
+
 
   return (
     <div className="p-6">
@@ -110,37 +112,52 @@ const handleApprove = async (reqId) => {
                   </span>
                 </td>
                 <td>{new Date(req.createdAt).toLocaleDateString()}</td>
-                <td className="space-x-2">
+                <td className="space-x-3">
                   {/* Approve */}
                   {req.status === "pending" && (
-                    <button
-                      onClick={() => handleApprove(req._id)}
-                      className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
-                      title="Approve"
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Approve"
                     >
-                      <MdApproval className="text-lg" />
-                    </button>
+                      <button
+                        onClick={() => handleApprove(req._id)}
+                        className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
+                        title="Approve"
+                      >
+                        <MdApproval className="text-lg" />
+                      </button>
+                    </div>
                   )}
 
                   {/* Reject */}
                   {req.status === "pending" && (
-                    <button
-                      onClick={() => handleReject(req._id)}
-                      className="btn btn-outline btn-square text-yellow-500 hover:bg-yellow-500 hover:text-black"
-                      title="Reject"
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Reject"
                     >
-                      <TbPlayerEject className="text-lg" />
-                    </button>
+                      <button
+                        onClick={() => handleReject(req._id)}
+                        className="btn btn-outline btn-square text-yellow-500 hover:bg-yellow-500 hover:text-black"
+                        title="Reject"
+                      >
+                        <TbPlayerEject className="text-lg" />
+                      </button>
+                    </div>
                   )}
 
                   {/* Delete */}
-                  <button
-                    onClick={() => handleDelete(req._id)}
-                    className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
-                    title="Delete"
+                  <div
+                    className="relative overflow-visible tooltip tooltip-bottom"
+                    data-tip="Delete"
                   >
-                    <IoTrashOutline className="text-lg" />
-                  </button>
+                    <button
+                      onClick={() => handleDelete(req._id)}
+                      className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                      title="Delete"
+                    >
+                      <IoTrashOutline className="text-lg" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

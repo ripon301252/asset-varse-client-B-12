@@ -15,6 +15,7 @@ const useRole = () => {
       setIsLoading(true);
       try {
         const res = await axiosSecure.get(`/users/${user.email}/role`);
+        console.log("Current role:", role);
         setRole(res.data?.role || "user");
       } catch (err) {
         console.error(err);
@@ -25,7 +26,7 @@ const useRole = () => {
     };
 
     fetchRole();
-  }, [user?.email, axiosSecure]);
+  }, [user?.email, axiosSecure, role]);
 
   return { role, isLoading };
 };

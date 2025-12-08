@@ -1,12 +1,16 @@
+// src/pages/EmployeeList/EmployeeList.jsx
 import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import useRole from "../../Hooks/useRole";
 import { IoTrashOutline } from "react-icons/io5";
 import { Link } from "react-router";
 import { FaRegEdit } from "react-icons/fa";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const axiosSecure = useAxiosSecure();
+  const { role } = useRole(); // HR or employee
 
   // Fetch all employees
   useEffect(() => {
@@ -25,8 +29,8 @@ const EmployeeList = () => {
 
     try {
       const res = await axiosSecure.delete(`/users/${id}`);
-      if (res.data.deletedCount > 0) {
-        alert("Users deleted!");
+      if (res.data.result.deletedCount > 0) {
+        alert("Employee deleted!");
         setEmployees((prev) => prev.filter((emp) => emp._id !== id));
       }
     } catch (err) {
@@ -34,6 +38,14 @@ const EmployeeList = () => {
       alert("Failed to delete employee");
     }
   };
+
+
+//   const res = await axiosSecure.delete(`/users/${id}`);
+// if (res.data.result.deletedCount > 0) {
+//   alert("Employee deleted!");
+//   setEmployees((prev) => prev.filter((emp) => emp._id !== id));
+// }
+
 
   return (
     <div className="p-6">
@@ -44,53 +56,89 @@ const EmployeeList = () => {
           <thead>
             <tr className="bg-base-200">
               <th>#</th>
-              <th>Name</th>
+              <th>Employee</th>
               <th>Email</th>
               <th>Role</th>
               <th>Status</th>
-              <th>Actions</th>
+              {role === "hr" && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
             {employees.map((emp, i) => (
               <tr key={emp._id}>
                 <td>{i + 1}</td>
-                <td>{emp.displayName || emp.name}</td>
+
+                {/* Employee name + image */}
+                <td className="flex items-center gap-3">
+                  {emp.photoURL ? (
+                    <img
+                      src={emp.photoURL}
+                      alt={emp.displayName || emp.name}
+                      className="w-14 h-14 rounded-md object-cover border"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm font-semibold text-white border">
+                      {emp.name?.[0]?.toUpperCase() || "U"}
+                    </div>
+                  )}
+                  <span>{emp.displayName || emp.name}</span>
+                </td>
+
                 <td>{emp.email}</td>
                 <td>{emp.role}</td>
                 <td>{emp.status || "active"}</td>
-                <td>
-                  <div
-                    className="relative overflow-visible tooltip tooltip-bottom"
-                    data-tip="Edit"
-                  >
-                    <Link
-                      to={`/addAsset`}
-                      className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
-                    >
-                      <FaRegEdit className="text-lg" />
-                    </Link>
-                  </div>
 
-                  <div
-                    className="relative overflow-visible tooltip tooltip-bottom"
-                    data-tip="Delete"
-                  >
-                    <button
-                      onClick={() => handleDelete(emp._id)}
-                      className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                {role === "hr" && (
+                  <td className="space-x-3">
+                    {/* Edit Button */}
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Edit"
                     >
-                      <IoTrashOutline className="text-lg" />
-                    </button>
-                  </div>
-                </td>
+                      <Link
+                        to={`/editEmployee/${emp._id}`}
+                        className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
+                      >
+                        <FaRegEdit className="text-lg" />
+                      </Link>
+                    </div>
+
+                    {/* Add Employee Button */}
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Add Employee"
+                    >
+                      <Link
+                        to={`/addEmployee`}
+                        className="btn btn-outline btn-square text-green-500 hover:bg-green-500 hover:text-black"
+                      >
+                        <AiOutlineUsergroupAdd className="text-lg" />
+                      </Link>
+                    </div>
+
+                    {/* Delete Button */}
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Delete"
+                    >
+                      <button
+                        onClick={() => handleDelete(emp._id)}
+                        className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                      >
+                        <IoTrashOutline className="text-lg" />
+                      </button>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
 
         {employees.length === 0 && (
-          <p className="text-center py-10 text-gray-500">No employees found…</p>
+          <p className="text-center py-10 text-gray-500">
+            No employees found…
+          </p>
         )}
       </div>
     </div>

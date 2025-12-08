@@ -119,21 +119,21 @@ const AssetList = () => {
                 </td>
                 <td className="font-bold">{asset.quantity}</td>
                 <td>{new Date(asset.createdAt).toLocaleDateString()}</td>
-                <td className="space-x-2">
+                <td className="space-x-3">
                   {/* Edit */}
                   <div
                     className="relative overflow-visible tooltip tooltip-bottom"
                     data-tip="Edit"
                   >
                     <Link
-                      to={`/addAsset`}
+                      to={`/editAsset`}
                       className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
                     >
                       <FaRegEdit className="text-lg" />
                     </Link>
                   </div>
                   {/* Request */}
-                  <div
+                  {/* <div
                     className="relative overflow-visible tooltip tooltip-bottom"
                     data-tip="Request"
                   >
@@ -143,7 +143,7 @@ const AssetList = () => {
                     >
                       <VscGitPullRequestGoToChanges className="text-lg font-bold" />
                     </Link>
-                  </div>
+                  </div> */}
 
                   {/* 🔥 Delete Button */}
                   <div
