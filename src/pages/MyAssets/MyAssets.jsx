@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import useAuth from "../../Hooks/useAuth";
 import { IoTrashOutline } from "react-icons/io5";
+import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
+import { Link } from "react-router";
 
 const MyAssets = () => {
   const { user } = useAuth();
@@ -102,7 +104,20 @@ const MyAssets = () => {
                   </td>
                   <td>{asset.reason || "-"}</td>
                   <td>{new Date(asset.createdAt).toLocaleDateString()}</td>
-                  <td>
+                  <td className="space-x-3">
+                    {/* Delete Button */}
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Request Asset"
+                    >
+                      <Link
+                        to={`/requestAsset`}
+                        className="btn btn-outline btn-square text-yellow-500 hover:bg-yellow-500 hover:text-black"
+                      >
+                        <VscGitPullRequestGoToChanges className="text-lg" />
+                      </Link>
+                    </div>
+
                     {/* Delete Button */}
                     <div
                       className="relative overflow-visible tooltip tooltip-bottom"
