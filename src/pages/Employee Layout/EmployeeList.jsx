@@ -40,13 +40,6 @@ const EmployeeList = () => {
   };
 
 
-//   const res = await axiosSecure.delete(`/users/${id}`);
-// if (res.data.result.deletedCount > 0) {
-//   alert("Employee deleted!");
-//   setEmployees((prev) => prev.filter((emp) => emp._id !== id));
-// }
-
-
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Employee List</h2>

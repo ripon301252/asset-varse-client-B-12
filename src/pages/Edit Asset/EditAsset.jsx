@@ -1,153 +1,193 @@
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router";
 
 const EditAsset = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
-  const [asset, setAsset] = useState(null);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [asset, setAsset] = useState({
+    name: "",
+    category: "",
+    quantity: 1,
+    image: "",
+  });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
+  const [loading, setLoading] = useState(true);
+  const [newPhoto, setNewPhoto] = useState(null);
 
   // ===========================
-  //  Load existing asset safely
+  // Fetch Asset Data
   // ===========================
   useEffect(() => {
-    const loadAsset = async () => {
-      try {
-        const res = await axiosSecure.get(`/assets/${id}`);
-
-        if (!res.data) {
-          setMessage("Asset not found!");
-          setLoading(false);
-          return;
-        }
-
+    axiosSecure
+      .get(`/assets/${id}`)
+      .then((res) => {
         setAsset(res.data);
-        reset(res.data); // safely reset form
-      } catch (err) {
-        console.error(err);
-        setMessage("Failed to load asset.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadAsset();
-  }, [id]); // ❗ remove axiosSecure, reset → prevent infinite loop
-
-  if (loading) return <p>Loading...</p>;
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, [id, axiosSecure]);
 
   // ===========================
-  // Handle update submit
+  // Input Handle
   // ===========================
-  const onSubmit = async (data) => {
-    let imageUrl = asset?.image;
-
-    try {
-      // Upload new image if provided
-      if (data.photo && data.photo[0]) {
-        const formData = new FormData();
-        formData.append("image", data.photo[0]);
-
-        const imgURL = `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_photo_host_key
-        }`;
-
-        const imgRes = await axios.post(imgURL, formData);
-        imageUrl = imgRes.data.data.display_url;
-      }
-
-      const updatedAsset = {
-        name: data.name,
-        type: data.type,
-        quantity: Number(data.quantity),
-        image: imageUrl,
-      };
-
-      const res = await axiosSecure.put(`/assets/${id}`, updatedAsset);
-
-      if (res.data.modifiedCount > 0) {
-        setMessage("Asset updated successfully!");
-      } else {
-        setMessage("No changes made.");
-      }
-    } catch (err) {
-      console.error(err);
-      setMessage("Update failed. Try again.");
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAsset((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ===========================
+  // Image Change
+  // ===========================
+  const handlePhotoChange = (e) => {
+    setNewPhoto(e.target.files[0]);
+  };
+
+  // ===========================
+  // Submit Update
+  // ===========================
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     let updatedData = { ...asset };
+//     let imageUrl = asset.image;
+
+    
+//     if (newPhoto) {
+//       const formData = new FormData();
+//       formData.append("image", newPhoto);
+
+//       const imgRes = await axios.post(
+//         `https://api.imgbb.com/1/upload?key=${
+//           import.meta.env.VITE_photo_host_key
+//         }`,
+//         formData
+//       );
+
+//       if (imgRes.data?.data?.display_url) {
+//         imageUrl = imgRes.data.data.display_url;
+//       }
+//     }
+
+//     updatedData.image = imageUrl;
+
+//   try {
+//   const res = await axiosSecure.put(`/assets/${id}`, updatedData);
+
+//   if (res.data.result?.modifiedCount > 0) {
+//     alert("Asset updated successfully!");
+//     navigate("/assets");
+//   } else {
+//     alert("No changes made!");
+//   }
+// } catch (err) {
+//   console.error(err);
+//   alert("Update failed!");
+// }
+
+//   };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  let updatedData = { ...asset };
+  let imageUrl = asset.image;
+
+  // Upload new image if exists
+  if (newPhoto) {
+    const formData = new FormData();
+    formData.append("image", newPhoto);
+
+    const imgRes = await axios.post(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_photo_host_key}`,
+      formData
+    );
+
+    if (imgRes.data?.data?.display_url) {
+      imageUrl = imgRes.data.data.display_url;
+    }
+  }
+
+  updatedData.image = imageUrl;
+
+  try {
+    const res = await axiosSecure.put(`/assets/${id}`, updatedData);
+
+    if (res.data.modifiedCount > 0) {
+      alert("Asset updated successfully!");
+      navigate("/assets");
+    } else {
+      alert("No changes made.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Update failed!");
+  }
+};
+
+
+
+
+  if (loading) return <p className="text-center py-10">Loading...</p>;
+
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">Edit Asset</h2>
+    <div className="p-6 max-w-md mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Edit Asset</h2>
 
-      {message && (
-        <div className="mb-4 p-2 rounded bg-green-200 text-green-800">
-          {message}
-        </div>
-      )}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* Name */}
+        <input
+          type="text"
+          name="name"
+          value={asset.name}
+          onChange={handleChange}
+          placeholder="Asset Name"
+          className="input input-bordered w-full"
+          required
+        />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Asset Name */}
-        <div>
-          <label className="block mb-1 font-semibold">Asset Name</label>
-          <input
-            type="text"
-            {...register("name", { required: true })}
-            className="input input-bordered w-full"
-          />
-        </div>
-
-        {/* Asset Type */}
-        <div>
-          <label className="block mb-1 font-semibold">Asset Type</label>
-          <select
-            {...register("type", { required: true })}
-            className="select select-bordered w-full"
-          >
-            <option value="Returnable">Returnable</option>
-            <option value="Non-returnable">Non-returnable</option>
-          </select>
-        </div>
+        {/* Category */}
+        <select
+          name="category"
+          value={asset.category}
+          onChange={handleChange}
+          className="select select-bordered w-full"
+          required
+        >
+          <option value="Returnable">Returnable</option>
+          <option value="Non-returnable">Non-returnable</option>
+        </select>
 
         {/* Quantity */}
-        <div>
-          <label className="block mb-1 font-semibold">Quantity</label>
-          <input
-            type="number"
-            {...register("quantity", { required: true, min: 1 })}
-            className="input input-bordered w-full"
+        <input
+          type="number"
+          name="quantity"
+          value={asset.quantity}
+          onChange={handleChange}
+          min={1}
+          className="input input-bordered w-full"
+          required
+        />
+
+        {/* Old Image Preview */}
+        {asset.image && (
+          <img
+            src={asset.image}
+            alt="Asset"
+            className="w-28 h-28 object-cover border rounded mx-auto"
           />
-        </div>
+        )}
 
-        {/* Photo Upload */}
-        <div>
-          <label className="block mb-1 font-semibold">Photo (Optional)</label>
-          <input type="file" {...register("photo")} className="file-input w-full" />
+        {/* Upload New Image */}
+        <input
+          type="file"
+          onChange={handlePhotoChange}
+          className="file-input file-input-bordered w-full"
+        />
 
-          {/* Only show current image if exists */}
-          {asset?.image && (
-            <img
-              src={asset.image}
-              alt="Current"
-              className="w-32 mt-3 rounded border"
-            />
-          )}
-        </div>
-
-        {/* Submit */}
-        <button type="submit" className="btn btn-primary w-full">
+        <button type="submit" className="btn btn-primary">
           Update Asset
         </button>
       </form>

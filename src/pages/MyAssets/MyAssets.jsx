@@ -1,6 +1,7 @@
 // src/pages/MyAssets/MyAssets.jsx
 import React, { useEffect, useState } from "react";
 import useAuth from "../../Hooks/useAuth";
+import { IoTrashOutline } from "react-icons/io5";
 
 const MyAssets = () => {
   const { user } = useAuth();
@@ -10,7 +11,6 @@ const MyAssets = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Backend থেকে employee এর assets fetch
     fetch(`http://localhost:3000/asset_requests?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => {
@@ -23,6 +23,34 @@ const MyAssets = () => {
       });
   }, [user]);
 
+  // =============================
+  // Delete handler
+  // =============================
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this asset request?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`http://localhost:3000/asset_requests/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (data.deletedCount > 0 || data.result?.deletedCount > 0) {
+        alert("Asset request deleted successfully!");
+        // UI থেকে remove করা
+        setMyAssets((prev) => prev.filter((asset) => asset._id !== id));
+      } else {
+        alert("Failed to delete asset request.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Delete failed!");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-16">
@@ -32,14 +60,16 @@ const MyAssets = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-6">My Assets</h2>
 
       {myAssets.length === 0 ? (
-        <p className="text-gray-600">You have not requested or been assigned any assets yet.</p>
+        <p className="text-gray-600">
+          You have not requested or been assigned any assets yet.
+        </p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="table w-full border">
+          <table className="table w-full">
             <thead>
               <tr className="bg-base-200">
                 <th>#</th>
@@ -48,6 +78,7 @@ const MyAssets = () => {
                 <th>Status</th>
                 <th>Reason</th>
                 <th>Date</th>
+                <th>Action</th> {/* Delete column */}
               </tr>
             </thead>
             <tbody>
@@ -71,6 +102,20 @@ const MyAssets = () => {
                   </td>
                   <td>{asset.reason || "-"}</td>
                   <td>{new Date(asset.createdAt).toLocaleDateString()}</td>
+                  <td>
+                    {/* Delete Button */}
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Delete"
+                    >
+                      <button
+                        onClick={() => handleDelete(asset._id)}
+                        className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                      >
+                        <IoTrashOutline className="text-lg" />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

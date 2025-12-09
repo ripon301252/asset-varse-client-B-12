@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import useAxios from "../../Hooks/useAxiosSecure";
+
 import { IoTrashOutline } from "react-icons/io5";
 import { FaRegEdit } from "react-icons/fa";
-import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
+
 
 const AssetList = () => {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("");
   const [assets, setAssets] = useState([]);
   const axiosSecure = useAxiosSecure();
-  const axios = useAxios();
 
   // Fetch assets from backend
   useEffect(() => {
@@ -31,23 +30,25 @@ const AssetList = () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await axios.delete(`http://localhost:3000/assets/${id}`);
+      const res = await axiosSecure.delete(`/assets/${id}`);;
 
-      if (res.data.deletedCount > 0) {
+      if (res.data.result.deletedCount > 0) {
         alert("Asset deleted!");
-        setAssets(assets.filter((item) => item._id !== id));
+        // setAssets(assets.filter((item) => item._id !== id));
+        setAssets(prevAssets => prevAssets.filter(item => item._id !== id));
       }
     } catch (error) {
       console.error(error);
     }
   };
-
   const filteredAssets = assets.filter((asset) => {
     return (
       asset.name.toLowerCase().includes(search.toLowerCase()) &&
       (filterType ? asset.type === filterType : true)
     );
   });
+
+
 
   return (
     <div className="p-6">
@@ -132,19 +133,7 @@ const AssetList = () => {
                       <FaRegEdit className="text-lg" />
                     </Link>
                   </div>
-                  {/* Request */}
-                  {/* <div
-                    className="relative overflow-visible tooltip tooltip-bottom"
-                    data-tip="Request"
-                  >
-                    <Link
-                      to={`/requestAsset`}
-                      className="btn btn-outline btn-square text-yellow-500 hover:bg-yellow-500 hover:text-black"
-                    >
-                      <VscGitPullRequestGoToChanges className="text-lg font-bold" />
-                    </Link>
-                  </div> */}
-
+                 
                   {/* 🔥 Delete Button */}
                   <div
                     className="relative overflow-visible tooltip tooltip-bottom"
