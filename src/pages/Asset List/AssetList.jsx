@@ -51,7 +51,7 @@ const AssetList = () => {
 
 
   return (
-    <div className="p-6">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between gap-3 mb-6">
         <h2 className="text-2xl font-bold">Asset List</h2>

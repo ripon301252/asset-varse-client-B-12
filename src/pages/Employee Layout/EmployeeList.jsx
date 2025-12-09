@@ -41,7 +41,7 @@ const EmployeeList = () => {
 
 
   return (
-    <div className="p-6">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">Employee List</h2>
 
       <div className="overflow-x-auto">

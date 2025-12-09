@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import useAuth from "../../Hooks/useAuth";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { IoTrashOutline } from "react-icons/io5";
 
 const MyTeam = () => {
   const { user } = useAuth();
@@ -27,6 +28,29 @@ const MyTeam = () => {
   useEffect(() => {
     if (user) fetchTeam();
   }, [user]);
+
+  // =============================
+  // Delete handler
+  // =============================
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this team member?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await axiosSecure.delete(`/users/${id}`);
+      if (res.data.deletedCount > 0 || res.data.result?.deletedCount > 0) {
+        alert("Team member deleted successfully!");
+        setTeamMembers((prev) => prev.filter((member) => member._id !== id));
+      } else {
+        alert("Failed to delete team member.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Delete failed!");
+    }
+  };
 
   if (loading) {
     return (
@@ -54,11 +78,12 @@ const MyTeam = () => {
                 <th>Joining Date</th>
                 <th>Status</th>
                 <th>Contact</th>
+                <th>Action</th> {/* Delete column */}
               </tr>
             </thead>
             <tbody>
               {teamMembers.map((member, i) => (
-                <tr key={member._id} className="hover:bg-gray-100">
+                <tr key={member._id} className="">
                   <td>{i + 1}</td>
                   <td>
                     {member.photoURL ? (
@@ -96,11 +121,27 @@ const MyTeam = () => {
                     <button
                       className="btn btn-sm btn-outline btn-info"
                       onClick={() =>
-                        alert(`Contact ${member.name} via email: ${member.email}`)
+                        alert(
+                          `Contact ${member.name} via email: ${member.email}`
+                        )
                       }
                     >
                       Contact
                     </button>
+                  </td>
+                  <td>
+                    {/* Delete Button */}
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Delete"
+                    >
+                      <button
+                        onClick={() => handleDelete(member._id)}
+                        className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                      >
+                        <IoTrashOutline className="text-lg" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

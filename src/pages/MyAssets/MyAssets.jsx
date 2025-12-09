@@ -83,7 +83,7 @@ const MyAssets = () => {
             </thead>
             <tbody>
               {myAssets.map((asset, index) => (
-                <tr key={asset._id} className="hover:bg-gray-100">
+                <tr key={asset._id} className="hover:bg-white/10">
                   <th>{index + 1}</th>
                   <td className="capitalize">{asset.assetName}</td>
                   <td>{asset.quantity}</td>
