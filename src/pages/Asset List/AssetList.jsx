@@ -4,6 +4,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 import { IoTrashOutline } from "react-icons/io5";
 import { FaRegEdit } from "react-icons/fa";
+import { MdAddToDrive } from "react-icons/md";
 
 
 const AssetList = () => {
@@ -131,6 +132,17 @@ const AssetList = () => {
                       className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
                     >
                       <FaRegEdit className="text-lg" />
+                    </Link>
+                  </div>
+                  <div
+                    className="relative overflow-visible tooltip tooltip-bottom"
+                    data-tip="Add Asset"
+                  >
+                    <Link
+                      to={`/addAsset`}
+                      className="btn btn-outline btn-square text-green-500 hover:bg-green-500 hover:text-black"
+                    >
+                      <MdAddToDrive className="text-lg" />
                     </Link>
                   </div>
                  
