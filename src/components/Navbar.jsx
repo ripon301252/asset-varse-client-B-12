@@ -59,7 +59,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         to="/myTeam"
-         className={(navData) =>
+        className={(navData) =>
           `px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${linkClass(
             navData
           )}`
@@ -69,7 +69,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         to="/requestAsset"
-         className={(navData) =>
+        className={(navData) =>
           `px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${linkClass(
             navData
           )}`
@@ -79,7 +79,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         to="/profile"
-         className={(navData) =>
+        className={(navData) =>
           `px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${linkClass(
             navData
           )}`
@@ -95,7 +95,7 @@ const Navbar = () => {
     <>
       <NavLink
         to="/assetList"
-         className={(navData) =>
+        className={(navData) =>
           `px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${linkClass(
             navData
           )}`
@@ -105,7 +105,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         to="/addAsset"
-         className={(navData) =>
+        className={(navData) =>
           `px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${linkClass(
             navData
           )}`
@@ -115,7 +115,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         to="/allRequests"
-         className={(navData) =>
+        className={(navData) =>
           `px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${linkClass(
             navData
           )}`
@@ -125,7 +125,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         to="/profile"
-         className={(navData) =>
+        className={(navData) =>
           `px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${linkClass(
             navData
           )}`
@@ -135,7 +135,7 @@ const Navbar = () => {
       </NavLink>
       <NavLink
         to="/employeeList"
-         className={(navData) =>
+        className={(navData) =>
           `px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${linkClass(
             navData
           )}`
@@ -201,7 +201,7 @@ const Navbar = () => {
                 />
 
                 {showName && (
-                  <div className="absolute left-1/2 -translate-x-1/2 lg:top-[52px] top-[42px] bg-white dark:bg-gray-900 text-xs px-2 py-1 rounded-b shadow-md">
+                  <div className="absolute left-1/2 -translate-x-1/2 lg:top-[52px] top-[42px] bg-white dark:bg-gray-900 text-xs text-center px-2 py-1 rounded-b shadow-md">
                     {user.displayName || "User"}
                   </div>
                 )}
@@ -261,10 +261,19 @@ const Navbar = () => {
       {open && (
         <div className="md:hidden bg-white dark:bg-gray-900 shadow border-t border-gray-200 dark:border-gray-700 animate-slideDown z-40">
           <div className="px-4 py-4 flex flex-col gap-3">
-            {/* {publicLinks} */}
             {!user && publicLinks}
             {user && role === "employee" && employeeLinks}
             {user && role === "hr" && hrLinks}
+
+            {/* Logout Button */}
+            {user && (
+              <button
+                onClick={handleSignOut}
+                className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 w-full text-left rounded-lg"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       )}

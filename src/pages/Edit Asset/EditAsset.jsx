@@ -10,7 +10,7 @@ const EditAsset = () => {
 
   const [asset, setAsset] = useState({
     name: "",
-    category: "",
+    type: "Returnable",
     quantity: 1,
     image: "",
   });
@@ -24,9 +24,7 @@ const EditAsset = () => {
   useEffect(() => {
     axiosSecure
       .get(`/assets/${id}`)
-      .then((res) => {
-        setAsset(res.data);
-      })
+      .then((res) => setAsset(res.data))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, [id, axiosSecure]);
@@ -49,86 +47,45 @@ const EditAsset = () => {
   // ===========================
   // Submit Update
   // ===========================
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-//     let updatedData = { ...asset };
-//     let imageUrl = asset.image;
+    let updatedData = { ...asset };
+    let imageUrl = asset.image;
 
-    
-//     if (newPhoto) {
-//       const formData = new FormData();
-//       formData.append("image", newPhoto);
+    if (newPhoto) {
+      const formData = new FormData();
+      formData.append("image", newPhoto);
 
-//       const imgRes = await axios.post(
-//         `https://api.imgbb.com/1/upload?key=${
-//           import.meta.env.VITE_photo_host_key
-//         }`,
-//         formData
-//       );
+      const imgRes = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_photo_host_key}`,
+        formData
+      );
 
-//       if (imgRes.data?.data?.display_url) {
-//         imageUrl = imgRes.data.data.display_url;
-//       }
-//     }
-
-//     updatedData.image = imageUrl;
-
-//   try {
-//   const res = await axiosSecure.put(`/assets/${id}`, updatedData);
-
-//   if (res.data.result?.modifiedCount > 0) {
-//     alert("Asset updated successfully!");
-//     navigate("/assets");
-//   } else {
-//     alert("No changes made!");
-//   }
-// } catch (err) {
-//   console.error(err);
-//   alert("Update failed!");
-// }
-
-//   };
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  let updatedData = { ...asset };
-  let imageUrl = asset.image;
-
-  // Upload new image if exists
-  if (newPhoto) {
-    const formData = new FormData();
-    formData.append("image", newPhoto);
-
-    const imgRes = await axios.post(
-      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_photo_host_key}`,
-      formData
-    );
-
-    if (imgRes.data?.data?.display_url) {
-      imageUrl = imgRes.data.data.display_url;
+      if (imgRes.data?.data?.display_url) {
+        imageUrl = imgRes.data.data.display_url;
+      }
     }
-  }
 
-  updatedData.image = imageUrl;
+    updatedData.image = imageUrl;
 
-  try {
-    const res = await axiosSecure.put(`/assets/${id}`, updatedData);
+    console.log("Sending updatedData:", updatedData); // Debug
 
-    if (res.data.modifiedCount > 0) {
-      alert("Asset updated successfully!");
-      navigate("/assets");
-    } else {
-      alert("No changes made.");
+    try {
+      const res = await axiosSecure.put(`/assets/${id}`, updatedData);
+      console.log("Update response:", res.data); // Debug
+
+      if (res.data.modifiedCount > 0) {
+        alert("Asset updated successfully!");
+        navigate("/assetList");
+      } else {
+        alert("No changes made!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Update failed!");
     }
-  } catch (err) {
-    console.error(err);
-    alert("Update failed!");
-  }
-};
-
-
-
+  };
 
   if (loading) return <p className="text-center py-10">Loading...</p>;
 
@@ -148,10 +105,10 @@ const handleSubmit = async (e) => {
           required
         />
 
-        {/* Category */}
+        {/* Type */}
         <select
-          name="category"
-          value={asset.category}
+          name="type"
+          value={asset.type}
           onChange={handleChange}
           className="select select-bordered w-full"
           required

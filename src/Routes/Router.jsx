@@ -69,7 +69,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/editAsset",
+        path: "/editAsset/:id",
         element: (
           <PrivateRouts>
             <HR>

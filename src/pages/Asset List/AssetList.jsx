@@ -127,7 +127,7 @@ const AssetList = () => {
                     data-tip="Edit"
                   >
                     <Link
-                      to={`/editAsset`}
+                      to={`/editAsset/${asset._id}`}
                       className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
                     >
                       <FaRegEdit className="text-lg" />
