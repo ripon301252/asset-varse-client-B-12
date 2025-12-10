@@ -235,9 +235,9 @@ const Navbar = () => {
               <div className="hidden md:flex">
                 <Link
                   to="/login"
-                  className="flex items-center gap-1 backdrop-blur-lg bg-white/10 dark:text-white px-3 py-2 rounded-lg hover:scale-105 transition-transform font-semibold shadow-md"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-gray-900 dark:text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 font-semibold"
                 >
-                  <IoLogInOutline /> LogIn
+                  <IoLogInOutline /> Login
                 </Link>
               </div>
             )}
@@ -270,7 +270,7 @@ const Navbar = () => {
 
                 <Link
                   to="/login"
-                  className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md font-medium"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-gray-900 dark:text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 font-semibold"
                 >
                   <IoLogInOutline /> Login
                 </Link>
