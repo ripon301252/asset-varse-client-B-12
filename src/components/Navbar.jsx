@@ -10,7 +10,7 @@ import useRole from "../Hooks/useRole";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
-  const { role,} = useRole();
+  const { role } = useRole();
   const [open, setOpen] = useState(false);
   const [avatarDropdown, setAvatarDropdown] = useState(false);
   const [showName, setShowName] = useState(false);
@@ -182,7 +182,7 @@ const Navbar = () => {
                 <img
                   src={user.photoURL}
                   alt={user.displayName || "User Avatar"}
-                  className="lg:w-10 lg:h-10 w-6 h-6 rounded-full border-2 shadow-md cursor-pointer hover:ring-2 hover:ring-[#5633e4] transition-all duration-300"
+                  className="lg:w-10 lg:h-10 w-8 h-8 rounded-full border-2 shadow-md cursor-pointer hover:ring-2 hover:ring-[#5633e4] transition-all duration-300"
                   onMouseEnter={() => setShowName(true)}
                   onMouseLeave={() => setShowName(false)}
                   onClick={() => setAvatarDropdown(!avatarDropdown)}
@@ -197,7 +197,7 @@ const Navbar = () => {
                 {avatarDropdown && (
                   <>
                     {role === "hr" && (
-                      <div className="absolute lg:-right-5 -right-12 mt-80 w-48 bg-white text-right dark:bg-gray-900 rounded-b-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
+                      <div className="absolute lg:-right-5 -right-5 mt-80 w-48 bg-white text-right dark:bg-gray-900 rounded-b-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
                         {hrLinks}
                         <NavLink
                           to="/packageUpgrade"
@@ -232,25 +232,29 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <Link
-                to="/login"
-                className="flex items-center gap-1 backdrop-blur-lg bg-white/10 dark:text-white px-3 py-2 rounded-lg hover:scale-105 transition-transform font-semibold shadow-md"
-              >
-                <IoLogInOutline /> LogIn
-              </Link>
+              <div className="hidden md:flex">
+                <Link
+                  to="/login"
+                  className="flex items-center gap-1 backdrop-blur-lg bg-white/10 dark:text-white px-3 py-2 rounded-lg hover:scale-105 transition-transform font-semibold shadow-md"
+                >
+                  <IoLogInOutline /> LogIn
+                </Link>
+              </div>
             )}
 
             {/* Mobile Menu Button */}
-            <button
-              className="md:hidden text-gray-700 dark:text-gray-200 focus:outline-none"
-              onClick={() => setOpen(!open)}
-            >
-              {open ? (
-                <IoCloseSharp className="w-5 h-5" />
-              ) : (
-                <GiHamburgerMenu className="w-5 h-5" />
-              )}
-            </button>
+            {!user && (
+              <button
+                className="md:hidden text-gray-700 dark:text-gray-200 focus:outline-none"
+                onClick={() => setOpen(!open)}
+              >
+                {open ? (
+                  <IoCloseSharp className="w-5 h-5" />
+                ) : (
+                  <GiHamburgerMenu className="w-5 h-5" />
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -259,8 +263,24 @@ const Navbar = () => {
       {open && (
         <div className="md:hidden bg-white dark:bg-gray-900 shadow border-t border-gray-200 dark:border-gray-700 animate-slideDown z-40">
           <div className="px-4 py-4 flex flex-col gap-3">
-            {!user && publicLinks}
+            {/* USER NOT LOGGED IN → Public Links + Login Button */}
+            {!user && (
+              <>
+                {publicLinks}
+
+                <Link
+                  to="/login"
+                  className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md font-medium"
+                >
+                  <IoLogInOutline /> Login
+                </Link>
+              </>
+            )}
+
+            {/* Logged-in → employee links */}
             {user && role === "employee" && employeeLinks}
+
+            {/* Logged-in → HR links */}
             {user && role === "hr" && hrLinks}
 
             {/* Logout Button */}
