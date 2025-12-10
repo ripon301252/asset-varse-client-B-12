@@ -15,11 +15,12 @@ const EditEmployee = () => {
     status: "active",
     photoURL: "",
   });
-
   const [loading, setLoading] = useState(true);
   const [newPhoto, setNewPhoto] = useState(null);
 
-  // Fetch employee data
+  // ===========================
+  // Fetch Employee Data
+  // ===========================
   useEffect(() => {
     axiosSecure
       .get(`/users/${id}`)
@@ -37,29 +38,39 @@ const EditEmployee = () => {
     setNewPhoto(e.target.files[0]);
   };
 
+  // ===========================
+  // Submit Update
+  // ===========================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     let updatedData = { ...employee };
+    let photoURL = employee.photoURL;
 
-    // If new photo uploaded → upload to imgbb
+    // যদি নতুন photo upload হয়
     if (newPhoto) {
       const formData = new FormData();
       formData.append("image", newPhoto);
 
-      const photoAPI = `https://api.imgbb.com/1/upload?key=${
-        import.meta.env.VITE_photo_host_key
-      }`;
+      const imgRes = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_photo_host_key}`,
+        formData
+      );
 
-      const photoRes = await axios.post(photoAPI, formData);
-      updatedData.photoURL = photoRes.data.data.url;
+      if (imgRes.data?.data?.display_url) {
+        photoURL = imgRes.data.data.display_url;
+      }
     }
+
+    updatedData.photoURL = photoURL;
 
     try {
       const res = await axiosSecure.put(`/users/${id}`, updatedData);
       if (res.data.modifiedCount > 0) {
         alert("Employee updated successfully!");
         navigate("/employeeList");
+      } else {
+        alert("No changes made!");
       }
     } catch (err) {
       console.error(err);
@@ -74,12 +85,11 @@ const EditEmployee = () => {
       <h2 className="text-2xl font-bold mb-4">Edit Employee</h2>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
         {/* Name */}
         <input
           type="text"
           name="name"
-          value={employee.name}
+          value={employee.name || ""}
           onChange={handleChange}
           placeholder="Full Name"
           className="input input-bordered w-full"
@@ -90,33 +100,17 @@ const EditEmployee = () => {
         <input
           type="email"
           name="email"
-          value={employee.email}
+          value={employee.email || ""}
           onChange={handleChange}
           placeholder="Email"
           className="input input-bordered w-full"
           required
         />
 
-        {/* Old Photo Preview */}
-        {employee.photoURL && (
-          <img
-            src={employee.photoURL}
-            alt="Employee"
-            className="w-24 h-24 rounded-full object-cover mx-auto border"
-          />
-        )}
-
-        {/* Photo Upload */}
-        <input
-          type="file"
-          onChange={handlePhotoChange}
-          className="file-input file-input-bordered w-full"
-        />
-
         {/* Role */}
         <select
           name="role"
-          value={employee.role}
+          value={employee.role || "employee"}
           onChange={handleChange}
           className="select select-bordered w-full"
         >
@@ -127,13 +121,38 @@ const EditEmployee = () => {
         {/* Status */}
         <select
           name="status"
-          value={employee.status}
+          value={employee.status || "active"}
           onChange={handleChange}
           className="select select-bordered w-full"
         >
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
+
+        {/* Old Photo Preview */}
+        {employee.photoURL && !newPhoto && (
+          <img
+            src={employee.photoURL}
+            alt={employee.name || "Employee"}
+            className="w-14 h-14 object-cover border rounded-md mx-auto"
+          />
+        )}
+
+        {/* New Photo Preview */}
+        {newPhoto && (
+          <img
+            src={URL.createObjectURL(newPhoto)}
+            alt="New Employee"
+            className="w-14 h-14 object-cover border rounded-md mx-auto"
+          />
+        )}
+
+        {/* Photo Upload */}
+        <input
+          type="file"
+          onChange={handlePhotoChange}
+          className="file-input file-input-bordered w-full"
+        />
 
         <button type="submit" className="btn btn-primary">
           Update Employee

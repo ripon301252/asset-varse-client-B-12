@@ -69,11 +69,11 @@ const EditAsset = () => {
 
     updatedData.image = imageUrl;
 
-    console.log("Sending updatedData:", updatedData); // Debug
+   
 
     try {
       const res = await axiosSecure.put(`/assets/${id}`, updatedData);
-      console.log("Update response:", res.data); // Debug
+     
 
       if (res.data.modifiedCount > 0) {
         alert("Asset updated successfully!");

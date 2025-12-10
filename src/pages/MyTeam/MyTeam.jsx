@@ -90,7 +90,7 @@ const MyTeam = () => {
                       <img
                         src={member.photoURL}
                         alt={member.name}
-                        className="w-12 h-12 rounded-full object-cover"
+                        className="w-14 h-14 rounded-md object-cover"
                       />
                     ) : (
                       <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold">
