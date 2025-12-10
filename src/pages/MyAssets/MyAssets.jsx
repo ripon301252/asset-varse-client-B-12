@@ -86,7 +86,7 @@ const MyAssets = () => {
             <tbody>
               {myAssets.map((asset, index) => (
                 <tr key={asset._id} className="hover:bg-white/10">
-                  <th>{index + 1}</th>
+                  <th className="sticky left-0 bg-white dark:bg-gray-900 z-10 px-4 py-2">{index + 1}</th>
                   <td className="capitalize">{asset.assetName}</td>
                   <td>{asset.quantity}</td>
                   <td>
@@ -105,6 +105,7 @@ const MyAssets = () => {
                   <td>{asset.reason || "-"}</td>
                   <td>{new Date(asset.createdAt).toLocaleDateString()}</td>
                   <td className="space-x-3">
+                  <div className="flex justify-start items-center gap-3 whitespace-nowrap">
                     {/* Delete Button */}
                     <div
                       className="relative overflow-visible tooltip tooltip-bottom"
@@ -130,6 +131,7 @@ const MyAssets = () => {
                         <IoTrashOutline className="text-lg" />
                       </button>
                     </div>
+                  </div>
                   </td>
                 </tr>
               ))}

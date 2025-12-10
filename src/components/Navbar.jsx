@@ -218,7 +218,7 @@ const Navbar = () => {
                       </div>
                     )}
                     {role === "employee" && (
-                      <div className="absolute lg:-right-4 -right-12 mt-62 w-40 bg-white text-right dark:bg-gray-900 rounded-b-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
+                      <div className="absolute lg:-right-4 -right-4 mt-62 w-40 bg-white text-right dark:bg-gray-900 rounded-b-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
                         {employeeLinks}
                         <button
                           onClick={handleSignOut}

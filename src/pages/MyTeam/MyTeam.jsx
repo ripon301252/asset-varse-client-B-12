@@ -84,7 +84,7 @@ const MyTeam = () => {
             <tbody>
               {teamMembers.map((member, i) => (
                 <tr key={member._id} className="">
-                  <td>{i + 1}</td>
+                  <td className="sticky left-0 bg-white dark:bg-gray-900 z-10 px-4 py-2">{i + 1}</td>
                   <td>
                     {member.photoURL ? (
                       <img
