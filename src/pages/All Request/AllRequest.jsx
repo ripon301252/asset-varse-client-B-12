@@ -53,24 +53,25 @@ const AllRequests = () => {
 
   // Delete request
   const handleDelete = async (reqId) => {
-  const confirmDelete = confirm("Are you sure you want to delete this request?");
-  if (!confirmDelete) return;
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this request?"
+    );
+    if (!confirmDelete) return;
 
-  try {
-    const res = await axiosSecure.delete(`/asset_requests/${reqId}`);
-    // backend অনুযায়ী চেক
-    if (res.data.result?.deletedCount > 0) {
-      alert("Request deleted!");
-      fetchRequests(); // UI update
-    } else {
-      alert("Delete failed!");
+    try {
+      const res = await axiosSecure.delete(`/asset_requests/${reqId}`);
+      // backend অনুযায়ী চেক
+      if (res.data.result?.deletedCount > 0) {
+        alert("Request deleted!");
+        fetchRequests(); // UI update
+      } else {
+        alert("Delete failed!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete request");
     }
-  } catch (err) {
-    console.error(err);
-    alert("Failed to delete request");
-  }
-};
-
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -112,51 +113,53 @@ const AllRequests = () => {
                   </span>
                 </td>
                 <td>{new Date(req.createdAt).toLocaleDateString()}</td>
-                <td className="space-x-3">
-                  {/* Approve */}
-                  {req.status === "pending" && (
+                <td>
+                  <div className="flex justify-start items-center gap-3 whitespace-nowrap">
+                    {/* Approve */}
+                    {req.status === "pending" && (
+                      <div
+                        className="relative overflow-visible tooltip tooltip-bottom"
+                        data-tip="Approve"
+                      >
+                        <button
+                          onClick={() => handleApprove(req._id)}
+                          className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
+                          title="Approve"
+                        >
+                          <MdApproval className="text-lg" />
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Reject */}
+                    {req.status === "pending" && (
+                      <div
+                        className="relative overflow-visible tooltip tooltip-bottom"
+                        data-tip="Reject"
+                      >
+                        <button
+                          onClick={() => handleReject(req._id)}
+                          className="btn btn-outline btn-square text-yellow-500 hover:bg-yellow-500 hover:text-black"
+                          title="Reject"
+                        >
+                          <TbPlayerEject className="text-lg" />
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Delete */}
                     <div
                       className="relative overflow-visible tooltip tooltip-bottom"
-                      data-tip="Approve"
+                      data-tip="Delete"
                     >
                       <button
-                        onClick={() => handleApprove(req._id)}
-                        className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
-                        title="Approve"
+                        onClick={() => handleDelete(req._id)}
+                        className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                        title="Delete"
                       >
-                        <MdApproval className="text-lg" />
+                        <IoTrashOutline className="text-lg" />
                       </button>
                     </div>
-                  )}
-
-                  {/* Reject */}
-                  {req.status === "pending" && (
-                    <div
-                      className="relative overflow-visible tooltip tooltip-bottom"
-                      data-tip="Reject"
-                    >
-                      <button
-                        onClick={() => handleReject(req._id)}
-                        className="btn btn-outline btn-square text-yellow-500 hover:bg-yellow-500 hover:text-black"
-                        title="Reject"
-                      >
-                        <TbPlayerEject className="text-lg" />
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Delete */}
-                  <div
-                    className="relative overflow-visible tooltip tooltip-bottom"
-                    data-tip="Delete"
-                  >
-                    <button
-                      onClick={() => handleDelete(req._id)}
-                      className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
-                      title="Delete"
-                    >
-                      <IoTrashOutline className="text-lg" />
-                    </button>
                   </div>
                 </td>
               </tr>

@@ -16,10 +16,20 @@ const HR = ({ children }) => {
     );
   }
 
-  // Role check
-  if (role !== "hr") {
-    return <Forbidden />;
+  if (!role) {
+    return (
+      <div className="flex justify-center items-center py-16">
+        <span className="loading loading-bars loading-xl"></span>
+      </div>
+    );
   }
+
+
+   // Role check
+  if (role.toLowerCase() !== "hr") {
+     return <Forbidden />;
+  }
+
 
   return children;
 };

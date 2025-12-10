@@ -22,11 +22,18 @@ import EditEmployee from "../pages/Employee Layout/EditEmployee";
 import AddEmployee from "../pages/Employee Layout/AddEmployee";
 import MyAssets from "../pages/MyAssets/MyAssets";
 import MyTeam from "../pages/MyTeam/MyTeam";
+import PackageLayout from "../PackageLayout/PackageLayout";
+import HRPackageUpgrade from "../PackageLayout/HRPackageUpgrade";
+import UpgradeSuccess from "../PackageLayout/UpgradeSuccess";
+import UpgradeCancel from "../PackageLayout/UpgradeCancel";
+import Error from "../pages/Error404/Error";
+import ChartHr from "../PackageLayout/ChartHr";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    errorElement: <Error />,
     children: [
       {
         path: "/",
@@ -168,9 +175,32 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // // Catch-all for forbidden routes
-  // {
-  //   path: "*",
-  //   element: <Forbidden />,
-  // },
+  {
+    path: "packageUpgrade",
+    element: (
+      <PrivateRouts>
+        <HR>
+          <PackageLayout />
+        </HR>
+      </PrivateRouts>
+    ),
+    children: [
+      {
+        path: "hrPackage",
+        element: <HRPackageUpgrade />,
+      },
+      {
+        path: "upgrade-success",
+        element: <UpgradeSuccess />,
+      },
+      {
+        path: "upgrade-cancel",
+        element: <UpgradeCancel />,
+      },
+      {
+        path: "chartHr",
+        element: <ChartHr />,
+      },
+    ],
+  },
 ]);

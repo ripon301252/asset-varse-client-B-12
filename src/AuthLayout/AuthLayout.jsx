@@ -13,12 +13,12 @@ const AuthLayout = () => {
         <h3 className="text-2xl font-bold mb-16">Asset<span className="text-orange-500">Verse</span></h3>
         
       </Link>
-      <div className="flex lg:flex-row flex-col justify-between items-center lg:px-36">
+      <div className="flex lg:flex-row gap-12 flex-col justify-between items-center lg:px-24">
         <div className="flex-1">
           <Outlet></Outlet>
         </div>
         <div className="flex-1">
-          <img src={authImg} alt="" />
+          <img className="w-full rounded-2xl" src={authImg} alt="" />
         </div>
       </div>
     </div>

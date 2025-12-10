@@ -39,7 +39,6 @@ const EmployeeList = () => {
     }
   };
 
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">Employee List</h2>
@@ -82,44 +81,46 @@ const EmployeeList = () => {
                 <td>{emp.status || "active"}</td>
 
                 {role === "hr" && (
-                  <td className="space-x-3">
-                    {/* Edit Button */}
-                    <div
-                      className="relative overflow-visible tooltip tooltip-bottom"
-                      data-tip="Edit"
-                    >
-                      <Link
-                        to={`/editEmployee/${emp._id}`}
-                        className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
+                  <td>
+                    <div className="flex justify-start items-center gap-3 whitespace-nowrap">
+                      {/* Edit Button */}
+                      <div
+                        className="relative overflow-visible tooltip tooltip-bottom"
+                        data-tip="Edit"
                       >
-                        <FaRegEdit className="text-lg" />
-                      </Link>
-                    </div>
+                        <Link
+                          to={`/editEmployee/${emp._id}`}
+                          className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
+                        >
+                          <FaRegEdit className="text-lg" />
+                        </Link>
+                      </div>
 
-                    {/* Add Employee Button */}
-                    <div
-                      className="relative overflow-visible tooltip tooltip-bottom"
-                      data-tip="Add Employee"
-                    >
-                      <Link
-                        to={`/addEmployee`}
-                        className="btn btn-outline btn-square text-green-500 hover:bg-green-500 hover:text-black"
+                      {/* Add Employee Button */}
+                      <div
+                        className="relative overflow-visible tooltip tooltip-bottom"
+                        data-tip="Add Employee"
                       >
-                        <AiOutlineUsergroupAdd className="text-lg" />
-                      </Link>
-                    </div>
+                        <Link
+                          to={`/addEmployee`}
+                          className="btn btn-outline btn-square text-green-500 hover:bg-green-500 hover:text-black"
+                        >
+                          <AiOutlineUsergroupAdd className="text-lg" />
+                        </Link>
+                      </div>
 
-                    {/* Delete Button */}
-                    <div
-                      className="relative overflow-visible tooltip tooltip-bottom"
-                      data-tip="Delete"
-                    >
-                      <button
-                        onClick={() => handleDelete(emp._id)}
-                        className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                      {/* Delete Button */}
+                      <div
+                        className="relative overflow-visible tooltip tooltip-bottom"
+                        data-tip="Delete"
                       >
-                        <IoTrashOutline className="text-lg" />
-                      </button>
+                        <button
+                          onClick={() => handleDelete(emp._id)}
+                          className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                        >
+                          <IoTrashOutline className="text-lg" />
+                        </button>
+                      </div>
                     </div>
                   </td>
                 )}
@@ -129,9 +130,7 @@ const EmployeeList = () => {
         </table>
 
         {employees.length === 0 && (
-          <p className="text-center py-10 text-gray-500">
-            No employees found…
-          </p>
+          <p className="text-center py-10 text-gray-500">No employees found…</p>
         )}
       </div>
     </div>

@@ -10,7 +10,7 @@ import useRole from "../Hooks/useRole";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
-  const { role, isLoading } = useRole();
+  const { role,} = useRole();
   const [open, setOpen] = useState(false);
   const [avatarDropdown, setAvatarDropdown] = useState(false);
   const [showName, setShowName] = useState(false);
@@ -146,18 +146,6 @@ const Navbar = () => {
     </>
   );
 
-  // Prevent flicker while loading role
-  {
-    isLoading || !user ? (
-      <div className="hidden md:flex items-center gap-6">{publicLinks}</div>
-    ) : (
-      <div className="hidden md:flex items-center gap-6">
-        {role === "employee" && employeeLinks}
-        {role === "hr" && hrLinks}
-      </div>
-    );
-  }
-
   return (
     <nav className="bg-white dark:bg-gray-900 shadow sticky top-0 z-50 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -209,22 +197,32 @@ const Navbar = () => {
                 {avatarDropdown && (
                   <>
                     {role === "hr" && (
-                      <div className="absolute lg:-right-5 -right-12 mt-71 w-36 bg-white text-right dark:bg-gray-900 rounded-b-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
+                      <div className="absolute lg:-right-5 -right-12 mt-80 w-48 bg-white text-right dark:bg-gray-900 rounded-b-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
                         {hrLinks}
+                        <NavLink
+                          to="/packageUpgrade"
+                          className={(navData) =>
+                            `px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 w-full text-right cursor-pointer hover:text-[#8755ea] ${linkClass(
+                              navData
+                            )}`
+                          }
+                        >
+                          Package Upgrade
+                        </NavLink>
                         <button
                           onClick={handleSignOut}
-                          className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 w-full text-right cursor-pointer hover:text-[#8755ea]"
+                          className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 w-full text-right cursor-pointer hover:text-[#8755ea] hover:scale-105"
                         >
                           Logout
                         </button>
                       </div>
                     )}
                     {role === "employee" && (
-                      <div className="absolute lg:-right-4 -right-12 mt-62 w-36 bg-white text-right dark:bg-gray-900 rounded-b-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
+                      <div className="absolute lg:-right-4 -right-12 mt-62 w-40 bg-white text-right dark:bg-gray-900 rounded-b-xl shadow-lg flex flex-col z-50 overflow-hidden dark:border-gray-700">
                         {employeeLinks}
                         <button
                           onClick={handleSignOut}
-                          className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 w-full text-right cursor-pointer hover:text-[#8755ea]"
+                          className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700 w-full text-right cursor-pointer hover:text-[#8755ea] hover:scale-105"
                         >
                           Logout
                         </button>

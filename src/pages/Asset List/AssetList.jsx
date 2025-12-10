@@ -6,7 +6,6 @@ import { IoTrashOutline } from "react-icons/io5";
 import { FaRegEdit } from "react-icons/fa";
 import { MdAddToDrive } from "react-icons/md";
 
-
 const AssetList = () => {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("");
@@ -31,12 +30,12 @@ const AssetList = () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await axiosSecure.delete(`/assets/${id}`);;
+      const res = await axiosSecure.delete(`/assets/${id}`);
 
       if (res.data.result.deletedCount > 0) {
         alert("Asset deleted!");
         // setAssets(assets.filter((item) => item._id !== id));
-        setAssets(prevAssets => prevAssets.filter(item => item._id !== id));
+        setAssets((prevAssets) => prevAssets.filter((item) => item._id !== id));
       }
     } catch (error) {
       console.error(error);
@@ -48,8 +47,6 @@ const AssetList = () => {
       (filterType ? asset.type === filterType : true)
     );
   });
-
-
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -121,42 +118,44 @@ const AssetList = () => {
                 </td>
                 <td className="font-bold">{asset.quantity}</td>
                 <td>{new Date(asset.createdAt).toLocaleDateString()}</td>
-                <td className="space-x-3">
-                  {/* Edit */}
-                  <div
-                    className="relative overflow-visible tooltip tooltip-bottom"
-                    data-tip="Edit"
-                  >
-                    <Link
-                      to={`/editAsset/${asset._id}`}
-                      className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
+                <td>
+                  <div className="flex justify-start items-center gap-3 whitespace-nowrap">
+                    {/* Edit */}
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Edit"
                     >
-                      <FaRegEdit className="text-lg" />
-                    </Link>
-                  </div>
-                  <div
-                    className="relative overflow-visible tooltip tooltip-bottom"
-                    data-tip="Add Asset"
-                  >
-                    <Link
-                      to={`/addAsset`}
-                      className="btn btn-outline btn-square text-green-500 hover:bg-green-500 hover:text-black"
+                      <Link
+                        to={`/editAsset/${asset._id}`}
+                        className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
+                      >
+                        <FaRegEdit className="text-lg" />
+                      </Link>
+                    </div>
+                    {/* Add Asset */}
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Add Asset"
                     >
-                      <MdAddToDrive className="text-lg" />
-                    </Link>
-                  </div>
-                 
-                  {/* 🔥 Delete Button */}
-                  <div
-                    className="relative overflow-visible tooltip tooltip-bottom"
-                    data-tip="Delete"
-                  >
-                    <button
-                      onClick={() => handleDelete(asset._id)}
-                      className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                      <Link
+                        to={`/addAsset`}
+                        className="btn btn-outline btn-square text-green-500 hover:bg-green-500 hover:text-black"
+                      >
+                        <MdAddToDrive className="text-lg" />
+                      </Link>
+                    </div>
+                    {/* 🔥 Delete Button */}
+                    <div
+                      className="relative overflow-visible tooltip tooltip-bottom"
+                      data-tip="Delete"
                     >
-                      <IoTrashOutline className="text-lg" />
-                    </button>
+                      <button
+                        onClick={() => handleDelete(asset._id)}
+                        className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                      >
+                        <IoTrashOutline className="text-lg" />
+                      </button>
+                    </div>
                   </div>
                 </td>
               </tr>
