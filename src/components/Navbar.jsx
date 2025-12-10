@@ -153,12 +153,12 @@ const Navbar = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center sm:gap-3 hover:scale-105 transition-transform duration-300 -ml-3"
+            className="flex items-center hover:scale-105 transition-transform duration-300 -ml-6"
           >
             <img
               src={Img}
               alt="AssetVerse Logo"
-              className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
+              className="w-10 h-10 sm:w-12 sm:h-12 md:w-13 md:h-12"
             />
             <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-white -ml-1">
               Asset<span className="text-orange-500">Verse</span>
