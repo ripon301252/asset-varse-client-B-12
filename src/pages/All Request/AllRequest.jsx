@@ -94,7 +94,7 @@ const AllRequests = () => {
           <tbody>
             {requests.map((req, i) => (
               <tr key={req._id}>
-                <th>{i + 1}</th>
+                <th className="sticky left-0 bg-white dark:bg-gray-900 z-10 px-4 py-2">{i + 1}</th>
                 <td>{req.userName}</td>
                 <td>{req.email}</td>
                 <td>{req.assetName}</td>

@@ -96,7 +96,7 @@ const AssetList = () => {
           <tbody>
             {filteredAssets.map((asset, i) => (
               <tr key={asset._id}>
-                <td>{i + 1}</td>
+                <td className="sticky left-0 bg-white dark:bg-gray-900 z-10 px-4 py-2">{i + 1}</td>
                 <td>
                   <img
                     src={asset.image}

@@ -58,8 +58,7 @@ const EmployeeList = () => {
           <tbody>
             {employees.map((emp, i) => (
               <tr key={emp._id}>
-                <td>{i + 1}</td>
-
+                <td className="sticky left-0 bg-white dark:bg-gray-900 z-10 px-4 py-2">{i + 1}</td>
                 {/* Employee name + image */}
                 <td className="flex items-center gap-3">
                   {emp.photoURL ? (
