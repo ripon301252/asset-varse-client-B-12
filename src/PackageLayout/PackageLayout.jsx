@@ -2,6 +2,7 @@ import React from "react";
 import { Link, NavLink, Outlet } from "react-router";
 import logoImg from "../assets/logo.png";
 import { TbTruckDelivery } from "react-icons/tb";
+import { FaAddressCard, FaCcAmazonPay, FaChartArea } from "react-icons/fa";
 
 const PackageLayout = () => {
   return (
@@ -51,7 +52,7 @@ const PackageLayout = () => {
             <ul className="menu w-full grow">
               {/* List item */}
               <li>
-                <Link to={"/"} className="mt-4 mb-1" >
+                <NavLink to={"/"} className="mt-5 mb-1 ">
                   <img
                     className="w-10 h-10 absolute -ml-3 "
                     src={logoImg}
@@ -59,7 +60,7 @@ const PackageLayout = () => {
                     data-tip="Homepage"
                   />
                   <span className="is-drawer-close:hidden ml-6">Homepage</span>
-                </Link>
+                </NavLink>
 
                 <Link
                   to={`/packageUpgrade`}
@@ -69,13 +70,13 @@ const PackageLayout = () => {
                   {/* Home icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
+                    viewBox="0 0 25 25"
                     strokeLinejoin="round"
                     strokeLinecap="round"
                     strokeWidth="2"
                     fill="none"
                     stroke="currentColor"
-                    className="my-1.5 inline-block size-4"
+                    className="my-1.5 inline-block size-5"
                   >
                     <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -86,14 +87,15 @@ const PackageLayout = () => {
 
               {/* List item */}
               <li>
-                <NavLink to={`/packageUpgrade/hrPackage`} className="" >
-                  <TbTruckDelivery className="text-xl font-bold" data-tip="HR Package" />
+                <NavLink to={`/packageUpgrade/hrPackage`} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="HR Package">
+                  <FaAddressCard className="text-lg font-bold" />
                   <span className="is-drawer-close:hidden">HR Package</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink to={`/packageUpgrade/chartHr`}>
-                  <TbTruckDelivery className="text-xl font-bold" />
+                <NavLink to={`/packageUpgrade/chartHr`} className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="Chart HR">
+                  <FaChartArea className="text-lg font-bold" />
                   <span className="is-drawer-close:hidden">Chart HR</span>
                 </NavLink>
               </li>
