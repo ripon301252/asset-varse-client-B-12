@@ -18,10 +18,6 @@ AssetVerse helps companies manage their office assets, employees, inventory, and
 
 `https://your-client-url.com`
 
-### 🌐 Server Live URL
-
-`https://your-server-url.com`
-
 ---
 
 # 🖥️ Client-Side (Frontend)
@@ -47,7 +43,6 @@ AssetVerse helps companies manage their office assets, employees, inventory, and
 * **React Router**
 * **Axios**
 * **React Hot Toast**
-* **TanStack Query**
 * **Tailwind CSS**
 * **DaisyUI / ShadCN (optional)**
 * **React Icons**
