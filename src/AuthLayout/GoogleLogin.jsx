@@ -2,45 +2,58 @@ import React from "react";
 import useAuth from "../Hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const GoogleLogin = () => {
   const { signInGoogle } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  // console.log("google location", location);
-  const axiosSecure = useAxiosSecure()
+  const axiosSecure = useAxiosSecure();
 
-  const handleGoogleSignIn = () => {
-    signInGoogle()
-      .then((result) => {
-        console.log(result.user);
-        navigate(location.state || "/");
-        // create user profile to firebase
-        const userInfo = {
-          email: result.user.email,
-          displayName: result.user.displayName,
-          photoURL: result.user.photoURL,
-        };
-        axiosSecure.post('/users', userInfo)
-          .then(res => {
-            console.log('user data has been stored', res.data)
-          })
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+const handleGoogleSignIn = () => {
+  signInGoogle()
+    .then((result) => {
+      toast.success("Login successful!");
+      navigate(location.state || "/");
+
+      const userInfo = {
+        email: result.user.email,
+        name: result.user.displayName,
+        displayName: result.user.displayName,
+        photoURL: result.user.photoURL,
+        role: "user", // default role
+      };
+
+      axiosSecure
+        .post("/users", userInfo)
+        .then((res) => {
+          console.log("Backend response:", res.data);
+          if (res.data.insertedId) {
+            toast.success("User data stored successfully!");
+          } else {
+            toast("User already exists.");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error("Failed to store user data.");
+        });
+    })
+    .catch((error) => {
+      console.error(error);
+      toast.error("Google login failed!");
+    });
+};
+
 
   return (
     <div>
-      {/* Divider */}
       <div className="flex items-center justify-center gap-2 my-5">
         <div className="h-px w-16 bg-gray-300"></div>
         <span className="text-black text-sm">or</span>
         <div className="h-px w-16 bg-gray-300"></div>
       </div>
 
-      {/* Google */}
       <button
         onClick={handleGoogleSignIn}
         className="btn bg-white text-black border-gray-300 w-full"

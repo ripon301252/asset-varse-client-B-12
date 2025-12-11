@@ -6,8 +6,8 @@ import { Link, Outlet } from "react-router";
 const AuthLayout = () => {
   return (
     <div className="max-w-7xl mx-auto py-10 ">
-      <Link to={`/`} className="flex gap-12  relative">
-        <div>
+      <Link to={`/`} className="flex gap-12 relative">
+        <div className="">
           <img className="w-14 absolute -mt-2" src={logoImg} alt="" />
         </div>
         <h3 className="text-2xl font-bold mb-16">Asset<span className="text-orange-500">Verse</span></h3>

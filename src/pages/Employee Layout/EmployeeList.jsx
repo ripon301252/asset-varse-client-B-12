@@ -6,6 +6,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import { Link } from "react-router";
 import { FaRegEdit } from "react-icons/fa";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import toast from "react-hot-toast";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
@@ -17,7 +18,10 @@ const EmployeeList = () => {
     axiosSecure
       .get("/users")
       .then((res) => setEmployees(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to fetch employees");
+      });
   }, [axiosSecure]);
 
   // Delete employee
@@ -30,12 +34,14 @@ const EmployeeList = () => {
     try {
       const res = await axiosSecure.delete(`/users/${id}`);
       if (res.data.result.deletedCount > 0) {
-        alert("Employee deleted!");
+        toast.success("Employee deleted successfully!");
         setEmployees((prev) => prev.filter((emp) => emp._id !== id));
+      } else {
+        toast.error("Failed to delete employee");
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to delete employee");
+      toast.error("Failed to delete employee");
     }
   };
 

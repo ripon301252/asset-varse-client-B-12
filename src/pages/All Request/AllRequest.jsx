@@ -4,6 +4,7 @@ import { MdApproval } from "react-icons/md";
 import { TbPlayerEject } from "react-icons/tb";
 import { IoTrashOutline } from "react-icons/io5";
 import { Link } from "react-router";
+import toast from "react-hot-toast";
 
 const AllRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -14,40 +15,42 @@ const AllRequests = () => {
     axiosSecure
       .get("/asset_requests")
       .then((res) => setRequests(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to fetch requests");
+      });
   };
 
   useEffect(() => {
     fetchRequests();
   }, []);
 
-  // Approve request → status update + asset quantity decrement
+  // Approve request
   const handleApprove = async (reqId) => {
     try {
-      // ❗ body পাঠানো যাবে না
       const res = await axiosSecure.put(`/asset_requests/${reqId}/approve`);
 
       if (res.data.message) {
-        alert(res.data.message);
+        toast.success(res.data.message);
         fetchRequests();
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to approve request");
+      toast.error("Failed to approve request");
     }
   };
 
-  // Reject request → just update status
+  // Reject request
   const handleReject = async (reqId) => {
     try {
       const res = await axiosSecure.put(`/asset_requests/${reqId}/reject`);
       if (res.data.message) {
-        alert(res.data.message);
+        toast.success(res.data.message);
         fetchRequests();
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to reject request");
+      toast.error("Failed to reject request");
     }
   };
 
@@ -60,16 +63,15 @@ const AllRequests = () => {
 
     try {
       const res = await axiosSecure.delete(`/asset_requests/${reqId}`);
-      // backend অনুযায়ী চেক
       if (res.data.result?.deletedCount > 0) {
-        alert("Request deleted!");
-        fetchRequests(); // UI update
+        toast.success("Request deleted!");
+        fetchRequests();
       } else {
-        alert("Delete failed!");
+        toast.error("Delete failed!");
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to delete request");
+      toast.error("Failed to delete request");
     }
   };
 

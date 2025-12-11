@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const EditEmployee = () => {
   const { id } = useParams();
@@ -25,7 +26,10 @@ const EditEmployee = () => {
     axiosSecure
       .get(`/users/${id}`)
       .then((res) => setEmployee(res.data))
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to fetch employee data");
+      })
       .finally(() => setLoading(false));
   }, [id, axiosSecure]);
 
@@ -52,13 +56,19 @@ const EditEmployee = () => {
       const formData = new FormData();
       formData.append("image", newPhoto);
 
-      const imgRes = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_photo_host_key}`,
-        formData
-      );
+      try {
+        const imgRes = await axios.post(
+          `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_photo_host_key}`,
+          formData
+        );
 
-      if (imgRes.data?.data?.display_url) {
-        photoURL = imgRes.data.data.display_url;
+        if (imgRes.data?.data?.display_url) {
+          photoURL = imgRes.data.data.display_url;
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to upload photo");
+        return;
       }
     }
 
@@ -67,14 +77,14 @@ const EditEmployee = () => {
     try {
       const res = await axiosSecure.put(`/users/${id}`, updatedData);
       if (res.data.modifiedCount > 0) {
-        alert("Employee updated successfully!");
+        toast.success("Employee updated successfully!");
         navigate("/employeeList");
       } else {
-        alert("No changes made!");
+        toast("No changes made");
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to update employee");
+      toast.error("Failed to update employee");
     }
   };
 

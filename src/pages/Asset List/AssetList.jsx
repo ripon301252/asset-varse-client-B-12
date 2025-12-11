@@ -5,6 +5,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { IoTrashOutline } from "react-icons/io5";
 import { FaRegEdit } from "react-icons/fa";
 import { MdAddToDrive } from "react-icons/md";
+import toast from "react-hot-toast";
 
 const AssetList = () => {
   const [search, setSearch] = useState("");
@@ -17,12 +18,13 @@ const AssetList = () => {
     axiosSecure
       .get("/assets")
       .then((res) => setAssets(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to fetch assets.");
+      });
   }, [axiosSecure]);
 
-  // ============================
   // 🔥 Delete Handler
-  // ============================
   const handleDelete = async (id) => {
     const confirmDelete = confirm(
       "Are you sure you want to delete this asset?"
@@ -33,14 +35,17 @@ const AssetList = () => {
       const res = await axiosSecure.delete(`/assets/${id}`);
 
       if (res.data.result.deletedCount > 0) {
-        alert("Asset deleted!");
-        // setAssets(assets.filter((item) => item._id !== id));
+        toast.success("Asset deleted successfully!");
         setAssets((prevAssets) => prevAssets.filter((item) => item._id !== id));
+      } else {
+        toast.error("Failed to delete asset.");
       }
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete asset.");
     }
   };
+
   const filteredAssets = assets.filter((asset) => {
     return (
       asset.name.toLowerCase().includes(search.toLowerCase()) &&
@@ -144,7 +149,7 @@ const AssetList = () => {
                         <MdAddToDrive className="text-lg" />
                       </Link>
                     </div>
-                    {/* 🔥 Delete Button */}
+                    {/* Delete Button */}
                     <div
                       className="relative overflow-visible tooltip tooltip-bottom"
                       data-tip="Delete"

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const EditAsset = () => {
   const { id } = useParams();
@@ -76,14 +77,14 @@ const EditAsset = () => {
      
 
       if (res.data.modifiedCount > 0) {
-        alert("Asset updated successfully!");
+        toast.success("Asset updated successfully!");
         navigate("/assetList");
       } else {
-        alert("No changes made!");
+        toast("No changes made!");
       }
     } catch (err) {
       console.error(err);
-      alert("Update failed!");
+      toast.error("Update failed!");
     }
   };
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const AddEmployee = () => {
   const [name, setName] = useState("");
@@ -15,7 +16,7 @@ const AddEmployee = () => {
     e.preventDefault();
 
     if (!name || !email) {
-      alert("Name and Email are required");
+      toast.error("Name and Email are required");
       return;
     }
 
@@ -27,19 +28,19 @@ const AddEmployee = () => {
 
         const image_API_URL = `https://api.imgbb.com/1/upload?expiration=600&key=${import.meta.env.VITE_photo_host_key}`;
         const res = await axios.post(image_API_URL, formData);
-        photoURL = res.data.data.url;
+        photoURL = res.data.data.display_url || res.data.data.url;
       }
 
       const newEmployee = { name, email, role, photoURL };
 
       const res = await axiosSecure.post("/users", newEmployee);
       if (res.data.insertedId) {
-        alert("Employee added successfully!");
-        navigate("/employeeList"); // add korar por list page e redirect
+        toast.success("Employee added successfully!");
+        navigate("/employeeList"); // redirect to list page
       }
     } catch (err) {
       console.error(err);
-      alert("Failed to add employee");
+      toast.error("Failed to add employee");
     }
   };
 

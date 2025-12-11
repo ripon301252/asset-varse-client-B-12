@@ -6,6 +6,7 @@ import GoogleLogin from "./GoogleLogin";
 import axios from "axios";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const {
@@ -15,69 +16,69 @@ const Register = () => {
   } = useForm();
 
   const { registerUser, updateUserProfile } = useAuth();
-
   const location = useLocation();
   const navigate = useNavigate();
-  // console.log("register", location);
-
   const axiosSecure = useAxiosSecure();
 
-   const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleRegister = (data) => {
-    // console.log("after register", data.photo[0]);
     const profileImg = data.photo[0];
 
     registerUser(data.email, data.password)
       .then(() => {
-        // console.log(result.user);
-        // 1. stor the image in form data
         const formData = new FormData();
         formData.append("image", profileImg);
 
-        // 2. send the photo to store and get the url
         const image_API_URL = `https://api.imgbb.com/1/upload?expiration=600&key=${
           import.meta.env.VITE_photo_host_key
         }`;
-        axios.post(image_API_URL, formData).then((res) => {
-          console.log("after image upload", res.data.data.url);
-          const photoURL = res.data.data.url
 
-          // create user profile to firebase
-          const userInfo = {
-            email: data.email,
-            displayName: data.name,
-            photoURL: photoURL,
-          }
-          axiosSecure.post('/users', userInfo)
-            .then(res =>{
-              if(res.data.insertedId){
-                console.log('user created in the database')
-              }
-            })
+        axios
+          .post(image_API_URL, formData)
+          .then((res) => {
+            const photoURL = res.data.data.url;
 
-          // 3. update user profile to firebase
-          const userProfile = {
-            displayName: data.name,
-            photoURL: photoURL,
-          };
-          updateUserProfile(userProfile)
-            .then(() => {
-              // console.log("user profile updated");
-              navigate(location.state || "/");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        });
+            const userInfo = {
+              email: data.email,
+              displayName: data.name,
+              photoURL: photoURL,
+            };
+
+            axiosSecure
+              .post("/users", userInfo)
+              .then((res) => {
+                if (res.data.insertedId) {
+                  toast.success("User registered successfully!");
+                }
+              })
+              .catch((err) => {
+                console.error(err);
+                toast.error("Failed to save user to database.");
+              });
+
+            const userProfile = { displayName: data.name, photoURL: photoURL };
+            updateUserProfile(userProfile)
+              .then(() => {
+                navigate(location.state || "/");
+              })
+              .catch((err) => {
+                console.error(err);
+                toast.error("Failed to update user profile.");
+              });
+          })
+          .catch((err) => {
+            console.error(err);
+            toast.error("Failed to upload profile image.");
+          });
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.error(err);
+        toast.error("Registration failed.");
       });
   };
 
-
-   const handleTogglePasswordShow = (e) => {
+  const handleTogglePasswordShow = (e) => {
     e.preventDefault();
     setShowPassword(!showPassword);
   };
@@ -91,14 +92,12 @@ const Register = () => {
           {/* Name */}
           <label className="label">Name</label>
           <input
-            type="name"
+            type="text"
             {...register("name", { required: true })}
             className="input w-full"
             placeholder="Your Name"
           />
-          {errors.email?.type === "required" && (
-            <p className="text-red-500">Name is required.</p>
-          )}
+          {errors.name && <p className="text-red-500">Name is required.</p>}
 
           {/* Photo */}
           <label className="label">Photo</label>
@@ -106,11 +105,8 @@ const Register = () => {
             type="file"
             {...register("photo", { required: true })}
             className="file-input w-full"
-            placeholder="Your Photo"
           />
-          {errors.email?.type === "required" && (
-            <p className="text-red-500">Photo is required.</p>
-          )}
+          {errors.photo && <p className="text-red-500">Photo is required.</p>}
 
           {/* Email */}
           <label className="label">Email</label>
@@ -120,9 +116,7 @@ const Register = () => {
             className="input w-full"
             placeholder="Email"
           />
-          {errors.email?.type === "required" && (
-            <p className="text-red-500">Email is required.</p>
-          )}
+          {errors.email && <p className="text-red-500">Email is required.</p>}
 
           {/* Password */}
           <div>
@@ -132,15 +126,13 @@ const Register = () => {
                 type={showPassword ? "text" : "password"}
                 {...register("password", {
                   required: true,
-                  minLength: 6,
+                  minLength: 8,
                   pattern:
                     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                 })}
                 className="input w-full"
                 placeholder="Password"
               />
-
-              {/* password hide & show */}
               <button
                 type="button"
                 onClick={handleTogglePasswordShow}
@@ -157,14 +149,11 @@ const Register = () => {
                 <p className="text-red-500">Password is required.</p>
               )}
               {errors.password?.type === "minLength" && (
-                <p className="text-red-500">
-                  Password must be 8 characters or longer.
-                </p>
+                <p className="text-red-500">Password must be 8 characters or longer.</p>
               )}
               {errors.password?.type === "pattern" && (
                 <p className="text-red-500">
-                  Password must be include one uppercase, one lowercase, one
-                  number, and one special character.
+                  Password must include one uppercase, one lowercase, one number, and one special character.
                 </p>
               )}
             </div>
@@ -177,7 +166,7 @@ const Register = () => {
       <GoogleLogin />
 
       <p className="mt-3 text-center">
-        You Already to Register Please !{" "}
+        Already registered?{" "}
         <Link
           state={location.state}
           to={`/login`}
