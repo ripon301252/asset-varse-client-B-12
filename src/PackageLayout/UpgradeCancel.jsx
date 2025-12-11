@@ -13,7 +13,7 @@ const UpgradeCancel = () => {
           Your payment was cancelled. Please try again or choose a different package.
         </p>
         <Link 
-          to={`/`}
+          to={`/packageUpgrade`}
           className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-500 transition-colors"
         >
           Go Back
