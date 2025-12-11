@@ -37,6 +37,25 @@ AssetVerse helps companies manage their office assets, employees, inventory, and
 
 ---
 
+# 🧱 Folder Structure
+
+## 📁 Client
+
+```
+client/
+ ├── src/
+ │   ├── components/
+ │   ├── pages/
+ │   ├── Hooks/
+ │   ├── context/
+ │   ├── router/
+ │   ├── assets/
+ │   └── main.jsx
+ ├── package.json
+ └── tailwind.config.js
+
+---
+
 ## 📦 Packages Used (Client)
 
 * **React**
