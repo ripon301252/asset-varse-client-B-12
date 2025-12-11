@@ -1,0 +1,98 @@
+[
+  {
+    "name": "camara",
+    "type": "Returnable",
+    "quantity": 10,
+    "image": "https://i.ibb.co/zTRShHSp/camera.jpg",
+    "company": "Canon",
+    "createdAt": "2025-12-09T08:04:59.375Z"
+  },
+  {
+    "name": "staplar",
+    "type": "Returnable",
+    "quantity": 9,
+    "image": "https://i.ibb.co/bMdQ2j1k/stapler.jpg",
+    "company": "Staples Inc.",
+    "createdAt": "2025-12-09T08:05:51.520Z"
+  },
+  {
+    "name": "pen",
+    "type": "Returnable",
+    "quantity": 10,
+    "image": "https://i.ibb.co/LXqSLX5r/pen.png",
+    "company": "Pilot",
+    "createdAt": "2025-12-09T08:06:42.491Z"
+  },
+  {
+    "name": "paper",
+    "type": "Non-returnable",
+    "quantity": 10,
+    "image": "https://i.ibb.co/1YJsmyCN/paper.jpg",
+    "company": "PaperCo",
+    "createdAt": "2025-12-09T08:07:15.972Z"
+  },
+  {
+    "name": "chair",
+    "type": "Returnable",
+    "quantity": 10,
+    "image": "https://i.ibb.co/JRyDjGHr/cheir.jpg",
+    "company": "Ikea",
+    "createdAt": "2025-12-09T08:07:53.616Z"
+  },
+  {
+    "name": "pencil",
+    "type": "Non-returnable",
+    "quantity": 10,
+    "image": "https://i.ibb.co/6055mww0/pencil.jpg",
+    "company": "Faber-Castell",
+    "createdAt": "2025-12-09T08:08:19.369Z"
+  },
+  {
+    "name": "staplar pin",
+    "type": "Non-returnable",
+    "quantity": 10,
+    "image": "https://i.ibb.co/CsJhtbF2/staoler-pin.jpg",
+    "company": "Staples Inc.",
+    "createdAt": "2025-12-09T08:08:51.318Z"
+  },
+  {
+    "name": "laptop",
+    "type": "Returnable",
+    "quantity": 10,
+    "image": "https://i.ibb.co/JNrJSYz/laptop.jpg",
+    "company": "Dell",
+    "createdAt": "2025-12-09T08:09:30.529Z"
+  },
+  {
+    "name": "mouse",
+    "type": "Returnable",
+    "quantity": 10,
+    "image": "https://i.ibb.co/S10Sh46/mouse.jpg",
+    "company": "Logitech",
+    "createdAt": "2025-12-09T08:09:57.206Z"
+  },
+  {
+    "name": "computer",
+    "type": "Returnable",
+    "quantity": 9,
+    "image": "https://i.ibb.co/76gbFt4/computer.jpg",
+    "company": "HP",
+    "createdAt": "2025-12-09T08:10:31.545Z"
+  },
+  {
+    "name": "mouse pad",
+    "type": "Returnable",
+    "quantity": 10,
+    "image": "https://i.ibb.co/xS7qn4ZB/mouse-pad.jpg",
+    "company": "Logitech",
+    "createdAt": "2025-12-09T08:11:34.736Z"
+  },
+  {
+    "name": "lock",
+    "type": "Returnable",
+    "quantity": 9,
+    "image": "https://i.ibb.co/W4WChxKt/auth-Img.jpg",
+    "company": "Yale",
+    "createdAt": "2025-12-11T03:10:12.455Z"
+  }
+]

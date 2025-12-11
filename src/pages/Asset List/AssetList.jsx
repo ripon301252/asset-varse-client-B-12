@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-
 import { IoTrashOutline } from "react-icons/io5";
 import { FaRegEdit } from "react-icons/fa";
 import { MdAddToDrive } from "react-icons/md";
 import toast from "react-hot-toast";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const AssetList = () => {
   const [search, setSearch] = useState("");
@@ -24,7 +25,7 @@ const AssetList = () => {
       });
   }, [axiosSecure]);
 
-  // 🔥 Delete Handler
+  // Delete Handler
   const handleDelete = async (id) => {
     const confirmDelete = confirm(
       "Are you sure you want to delete this asset?"
@@ -34,7 +35,7 @@ const AssetList = () => {
     try {
       const res = await axiosSecure.delete(`/assets/${id}`);
 
-      if (res.data.result.deletedCount > 0) {
+      if (res.data.result?.deletedCount > 0) {
         toast.success("Asset deleted successfully!");
         setAssets((prevAssets) => prevAssets.filter((item) => item._id !== id));
       } else {
@@ -44,6 +45,34 @@ const AssetList = () => {
       console.error(error);
       toast.error("Failed to delete asset.");
     }
+  };
+
+  // Download PDF Report
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("AssetVerse - Asset List Report", 14, 10);
+
+    const tableColumn = ["Name", "Type", "Company", "Quantity", "Date Added"];
+
+    const tableRows = [];
+
+    assets.forEach((asset) => {
+      tableRows.push([
+        asset.name,
+        asset.type,
+        asset.company || "-",
+        asset.quantity,
+        new Date(asset.createdAt).toLocaleDateString(),
+      ]);
+    });
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save("asset_list.pdf");
   };
 
   const filteredAssets = assets.filter((asset) => {
@@ -56,11 +85,19 @@ const AssetList = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between gap-3 mb-6">
+      <div className="flex flex-col md:flex-row justify-between gap-3 mb-6 items-center">
         <h2 className="text-2xl font-bold">Asset List</h2>
-        <Link to={`/addAsset`} className="btn btn-primary">
-          + Add New Asset
-        </Link>
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={handleExportPDF}
+            className="btn btn-outline btn-success"
+          >
+            Export PDF
+          </button>
+          <Link to={`/addAsset`} className="btn btn-primary">
+            + Add New Asset
+          </Link>
+        </div>
       </div>
 
       {/* Search & Filter */}
@@ -92,7 +129,8 @@ const AssetList = () => {
               <th>Image</th>
               <th>Name</th>
               <th>Type</th>
-              <th>Qty</th>
+              <th>Company</th>
+              <th>Quantity</th>
               <th>Date Added</th>
               <th>Actions</th>
             </tr>
@@ -101,18 +139,27 @@ const AssetList = () => {
           <tbody>
             {filteredAssets.map((asset, i) => (
               <tr key={asset._id} className="hover:bg-white/10">
-                <td className="sticky left-0 bg-white dark:bg-gray-900 z-10 px-4 py-2">{i + 1}</td>
-                <td>
-                  <img
-                    src={asset.image}
-                    alt={asset.name}
-                    className="w-14 h-14 rounded-md border"
-                  />
+                <td className="sticky left-0 bg-white dark:bg-gray-900 z-10 px-4 py-2">
+                  {i + 1}
                 </td>
+
+                {/* Image */}
+                <td>
+                  {asset.image ? (
+                    <img
+                      src={asset.image}
+                      alt={asset.name}
+                      className="w-14 h-14 rounded-md border"
+                    />
+                  ) : (
+                    "-"
+                  )}
+                </td>
+
                 <td className="font-semibold">{asset.name}</td>
                 <td>
                   <span
-                    className={`badge ${
+                    className={`badge truncate max-w-[100px] ${
                       asset.type === "Returnable"
                         ? "badge-primary"
                         : "badge-secondary"
@@ -121,11 +168,13 @@ const AssetList = () => {
                     {asset.type}
                   </span>
                 </td>
+                <td>{asset.company || "-"}</td>
                 <td className="font-bold">{asset.quantity}</td>
                 <td>{new Date(asset.createdAt).toLocaleDateString()}</td>
+
+                {/* Actions */}
                 <td>
                   <div className="flex justify-start items-center gap-3 whitespace-nowrap">
-                    {/* Edit */}
                     <div
                       className="relative overflow-visible tooltip tooltip-bottom"
                       data-tip="Edit"
@@ -133,11 +182,11 @@ const AssetList = () => {
                       <Link
                         to={`/editAsset/${asset._id}`}
                         className="btn btn-outline btn-square text-blue-500 hover:bg-blue-500 hover:text-black"
+                        title="Edit"
                       >
                         <FaRegEdit className="text-lg" />
                       </Link>
                     </div>
-                    {/* Add Asset */}
                     <div
                       className="relative overflow-visible tooltip tooltip-bottom"
                       data-tip="Add Asset"
@@ -145,11 +194,12 @@ const AssetList = () => {
                       <Link
                         to={`/addAsset`}
                         className="btn btn-outline btn-square text-green-500 hover:bg-green-500 hover:text-black"
+                        title="Add Asset"
                       >
                         <MdAddToDrive className="text-lg" />
                       </Link>
                     </div>
-                    {/* Delete Button */}
+
                     <div
                       className="relative overflow-visible tooltip tooltip-bottom"
                       data-tip="Delete"
@@ -157,6 +207,7 @@ const AssetList = () => {
                       <button
                         onClick={() => handleDelete(asset._id)}
                         className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                        title="Delete"
                       >
                         <IoTrashOutline className="text-lg" />
                       </button>

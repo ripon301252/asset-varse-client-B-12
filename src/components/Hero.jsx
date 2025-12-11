@@ -3,7 +3,7 @@ import HeroImg from "../assets/banner.jpg";
 
 const Hero = () => {
   return (
-    <section className="bg-white dark:bg-gray-900 py-16">
+    <section className="bg-white dark:bg-gray-700 py-16">
       <div className="max-w-7xl mx-auto px-5 lg:px-20 flex flex-col-reverse lg:flex-row items-center gap-10">
         
         {/* Left Text */}
