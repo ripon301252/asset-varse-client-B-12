@@ -16,10 +16,10 @@ const useRole = () => {
       try {
         const res = await axiosSecure.get(`/users/${user.email}/role`);
         console.log("Current role:", role);
-        setRole(res.data?.role || "user");
+        setRole(res.data?.role || "employee");
       } catch (err) {
         console.error(err);
-        setRole("user");
+        setRole("employee");
       } finally {
         setIsLoading(false);
       }
@@ -32,3 +32,8 @@ const useRole = () => {
 };
 
 export default useRole;
+
+
+
+
+

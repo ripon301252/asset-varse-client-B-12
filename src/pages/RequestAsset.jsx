@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import useAuth from "../Hooks/useAuth";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import toast from "react-hot-toast"; // ✅ Import toast
 
 const RequestAsset = () => {
   const { user } = useAuth();
@@ -11,7 +12,6 @@ const RequestAsset = () => {
     reset,
     formState: { errors },
   } = useForm();
-  const [message, setMessage] = useState("");
   const [assets, setAssets] = useState([]);
   const axiosSecure = useAxiosSecure();
 
@@ -35,26 +35,20 @@ const RequestAsset = () => {
     try {
       const res = await axiosSecure.post("/asset_requests", newRequest);
       if (res.data.insertedId) {
-        setMessage("Request submitted successfully!");
+        toast.success("Request submitted successfully!"); // ✅ toast success
         reset();
       } else {
-        setMessage("Failed to submit request.");
+        toast.error("Failed to submit request."); // ✅ toast error
       }
     } catch (err) {
       console.error(err);
-      setMessage("Something went wrong. Try again.");
+      toast.error("Something went wrong. Try again."); // ✅ toast error
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Request Asset</h2>
-
-      {message && (
-        <div className="mb-4 p-2 rounded bg-green-200 text-green-800">
-          {message}
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Asset Dropdown */}

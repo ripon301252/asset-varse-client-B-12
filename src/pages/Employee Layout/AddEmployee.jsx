@@ -12,40 +12,44 @@ const AddEmployee = () => {
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!name || !email) {
-      toast.error("Name and Email are required");
-      return;
+  if (!name || !email) {
+    toast.error("Name and Email are required");
+    return;
+  }
+
+  try {
+    let photoURL = "";
+    if (photoFile) {
+      const formData = new FormData();
+      formData.append("image", photoFile);
+
+      const image_API_URL = `https://api.imgbb.com/1/upload?expiration=600&key=${import.meta.env.VITE_photo_host_key}`;
+      const resImg = await axios.post(image_API_URL, formData);
+      photoURL = resImg.data.data.display_url || resImg.data.data.url;
     }
 
-    try {
-      let photoURL = "";
-      if (photoFile) {
-        const formData = new FormData();
-        formData.append("image", photoFile);
+    const newEmployee = { name, email, role, photoURL };
 
-        const image_API_URL = `https://api.imgbb.com/1/upload?expiration=600&key=${import.meta.env.VITE_photo_host_key}`;
-        const res = await axios.post(image_API_URL, formData);
-        photoURL = res.data.data.display_url || res.data.data.url;
-      }
+    const res = await axiosSecure.post("/users", newEmployee);
 
-      const newEmployee = { name, email, role, photoURL };
-
-      const res = await axiosSecure.post("/users", newEmployee);
-      if (res.data.insertedId) {
-        toast.success("Employee added successfully!");
-        navigate("/employeeList"); // redirect to list page
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to add employee");
+    if (res.data.success) {
+      toast.success(res.data.message || "Employee added/updated successfully!");
+      navigate("/employeeList");
+    } else {
+      toast.error(res.data.message || "Failed to add employee");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to add employee");
+  }
+};
+
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow-md">
+    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-lg shadow-md my-10">
       <h2 className="text-2xl font-bold mb-6">Add New Employee</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">

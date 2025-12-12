@@ -3,7 +3,6 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { MdApproval } from "react-icons/md";
 import { TbPlayerEject } from "react-icons/tb";
 import { IoTrashOutline } from "react-icons/io5";
-import { Link } from "react-router";
 import toast from "react-hot-toast";
 
 const AllRequests = () => {
@@ -63,9 +62,11 @@ const AllRequests = () => {
 
     try {
       const res = await axiosSecure.delete(`/asset_requests/${reqId}`);
-      if (res.data.result?.deletedCount > 0) {
+      console.log(res.data); // debug purpose
+
+      if (res.data.deletedCount > 0) {
         toast.success("Request deleted!");
-        fetchRequests();
+        fetchRequests(); // আবার রিফ্রেশ
       } else {
         toast.error("Delete failed!");
       }
@@ -96,7 +97,9 @@ const AllRequests = () => {
           <tbody>
             {requests.map((req, i) => (
               <tr key={req._id} className="hover:bg-white/10">
-                <th className="sticky left-0 bg-white dark:bg-gray-900 z-10 px-4 py-2">{i + 1}</th>
+                <th className="sticky left-0 bg-white dark:bg-gray-900 z-10 px-4 py-2">
+                  {i + 1}
+                </th>
                 <td>{req.userName}</td>
                 <td>{req.email}</td>
                 <td>{req.assetName}</td>
@@ -108,6 +111,8 @@ const AllRequests = () => {
                         ? "badge-warning"
                         : req.status === "approved"
                         ? "badge-success"
+                        : req.status === "returned"
+                        ? "badge-info"
                         : "badge-error"
                     }`}
                   >

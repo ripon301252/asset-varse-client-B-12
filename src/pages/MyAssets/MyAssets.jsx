@@ -7,6 +7,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { PiKeyReturnBold } from "react-icons/pi";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import toast from "react-hot-toast"; // import toast
 
 const MyAssets = () => {
   const { user } = useAuth();
@@ -17,7 +18,6 @@ const MyAssets = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Fetch asset requests
     const fetchMyAssets = async () => {
       try {
         const res = await axiosSecure.get(
@@ -25,7 +25,6 @@ const MyAssets = () => {
         );
         const requests = res.data;
 
-        // For each request, fetch asset details
         const assetsWithDetails = await Promise.all(
           requests.map(async (req) => {
             if (!req.assetId) return req;
@@ -36,18 +35,11 @@ const MyAssets = () => {
 
               return {
                 ...req,
-                image: assetDetails.image,
-                type: assetDetails.type,
-                company: assetDetails.company,
+                assetName: assetDetails.name || req.assetName,
+                image: assetDetails.image || "",
+                type: assetDetails.type || "",
+                company: assetDetails.company || "",
               };
-
-              // return {
-              //   ...req,
-              //   assetName: assetDetails.name || req.assetName,
-              //   image: assetDetails.image || "",
-              //   type: assetDetails.type || "",
-              //   company: assetDetails.company || "",
-              // };
             } catch (err) {
               console.error("Asset details fetch failed:", err);
               return req;
@@ -68,44 +60,49 @@ const MyAssets = () => {
 
   // Delete asset request
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this asset request?"))
-      return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this asset request?"
+    );
+    if (!confirmDelete) return;
 
     try {
       const res = await axiosSecure.delete(`/asset_requests/${id}`);
       if (res.data.deletedCount > 0 || res.data.result?.deletedCount > 0) {
-        alert("Asset request deleted successfully!");
+        toast.success("Asset request deleted successfully!"); // toast
         setMyAssets((prev) => prev.filter((asset) => asset._id !== id));
       } else {
-        alert("Failed to delete asset request.");
+        toast.error("Failed to delete asset request!"); // toast
       }
     } catch (err) {
       console.error(err);
-      alert("Delete failed!");
+      toast.error("Delete failed!"); // toast
     }
   };
 
   // Return asset
   const handleReturn = async (id) => {
-    if (!window.confirm("Are you sure you want to return this asset?")) return;
+    const confirmReturn = window.confirm(
+      "Are you sure you want to return this asset?"
+    );
+    if (!confirmReturn) return;
 
     try {
       const res = await axiosSecure.put(`/asset_requests/${id}/return`);
       const data = res.data;
 
       if (data.modifiedCount > 0 || data.success) {
-        alert("Asset returned successfully!");
+        toast.success("Asset returned successfully!"); // toast
         setMyAssets((prev) =>
           prev.map((asset) =>
             asset._id === id ? { ...asset, status: "returned" } : asset
           )
         );
       } else {
-        alert("Failed to return asset.");
+        toast.error("Failed to return asset!"); // toast
       }
     } catch (err) {
       console.error(err);
-      alert("Return failed!");
+      toast.error("Return failed!"); // toast
     }
   };
 
@@ -230,12 +227,12 @@ const MyAssets = () => {
                   <td>
                     <div className="flex justify-start items-center gap-3 whitespace-nowrap">
                       {/* Return */}
-                      <div
-                        className="relative overflow-visible tooltip tooltip-bottom"
-                        data-tip="Return"
-                      >
-                        {asset.type === "Returnable" &&
-                          asset.status === "approved" && (
+                      {asset.type === "Returnable" &&
+                        asset.status === "approved" && (
+                          <div
+                            className="relative overflow-visible tooltip tooltip-bottom"
+                            data-tip="Return"
+                          >
                             <button
                               onClick={() => handleReturn(asset._id)}
                               className="btn btn-outline btn-square text-green-500 hover:bg-green-500 hover:text-black"
@@ -243,26 +240,36 @@ const MyAssets = () => {
                             >
                               <PiKeyReturnBold className="text-lg" />
                             </button>
-                          )}
-                      </div>
+                          </div>
+                        )}
 
                       {/* Request Asset */}
-                      <Link
-                        to={`/requestAsset`}
-                        className="btn btn-outline btn-square text-yellow-500 hover:bg-yellow-500 hover:text-black"
-                        title="Request Asset"
+                      <div
+                        className="relative overflow-visible tooltip tooltip-bottom"
+                        data-tip="Request Asset"
                       >
-                        <VscGitPullRequestGoToChanges className="text-lg" />
-                      </Link>
+                        <Link
+                          to={`/requestAsset`}
+                          className="btn btn-outline btn-square text-yellow-500 hover:bg-yellow-500 hover:text-black"
+                          title="Request Asset"
+                        >
+                          <VscGitPullRequestGoToChanges className="text-lg" />
+                        </Link>
+                      </div>
 
                       {/* Delete */}
-                      <button
-                        onClick={() => handleDelete(asset._id)}
-                        className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
-                        title="Delete"
+                      <div
+                        className="relative overflow-visible tooltip tooltip-bottom"
+                        data-tip="Delete"
                       >
-                        <IoTrashOutline className="text-lg" />
-                      </button>
+                        <button
+                          onClick={() => handleDelete(asset._id)}
+                          className="btn btn-outline btn-square text-[#f87171] hover:bg-[#f87171] hover:text-black"
+                          title="Delete"
+                        >
+                          <IoTrashOutline className="text-lg" />
+                        </button>
+                      </div>
                     </div>
                   </td>
                 </tr>

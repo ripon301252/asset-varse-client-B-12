@@ -18,7 +18,7 @@ const Footer = () => {
         {/* Logo & Description */}
         <div className="mb-8 md:mb-0">
           <div className="flex items-center mb-2 hover:scale-105 transition-transform duration-300">
-            <img src={Img} alt="PawMart Logo" className="w-12 h-12 -ml-2" />
+            <img src={Img} alt="PawMart Logo" className="w-12 h-12 md:-ml-2 -ml-4" />
             <h1 className="text-2xl font-bold">
               Asset<span className="text-orange-500">Verse</span>
             </h1>

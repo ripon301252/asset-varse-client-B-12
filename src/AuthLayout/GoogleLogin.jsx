@@ -21,7 +21,7 @@ const handleGoogleSignIn = () => {
         name: result.user.displayName,
         displayName: result.user.displayName,
         photoURL: result.user.photoURL,
-        role: "user", // default role
+        role: "employee", // default role
       };
 
       axiosSecure

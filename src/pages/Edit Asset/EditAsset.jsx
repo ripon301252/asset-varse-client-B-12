@@ -14,6 +14,7 @@ const EditAsset = () => {
     type: "Returnable",
     quantity: 1,
     image: "",
+    companyName: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -59,7 +60,9 @@ const EditAsset = () => {
       formData.append("image", newPhoto);
 
       const imgRes = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_photo_host_key}`,
+        `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_photo_host_key
+        }`,
         formData
       );
 
@@ -70,11 +73,8 @@ const EditAsset = () => {
 
     updatedData.image = imageUrl;
 
-   
-
     try {
       const res = await axiosSecure.put(`/assets/${id}`, updatedData);
-     
 
       if (res.data.modifiedCount > 0) {
         toast.success("Asset updated successfully!");
@@ -117,6 +117,17 @@ const EditAsset = () => {
           <option value="Returnable">Returnable</option>
           <option value="Non-returnable">Non-returnable</option>
         </select>
+
+        {/* Company Name */}
+        <input
+          type="text"
+          name="companyName"
+          value={asset.companyName}
+          onChange={handleChange}
+          placeholder="Company Name"
+          className="input input-bordered w-full"
+          required
+        />
 
         {/* Quantity */}
         <input

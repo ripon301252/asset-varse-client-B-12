@@ -14,6 +14,7 @@ const AddAsset = () => {
       name: "",
       type: "Returnable",
       quantity: 1,
+      company: "",
     },
   });
 
@@ -41,6 +42,7 @@ const AddAsset = () => {
       // 2️⃣ Save Asset Info to Backend
       const newAsset = {
         name: data.name,
+        company: data.company,
         type: data.type,
         quantity: Number(data.quantity),
         image: imageUrl,
@@ -66,6 +68,7 @@ const AddAsset = () => {
       <h2 className="text-2xl font-bold mb-6">Add New Asset</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        
         {/* Asset Name */}
         <div>
           <label className="block mb-1 font-semibold">Asset Name</label>
@@ -79,6 +82,22 @@ const AddAsset = () => {
           />
           {errors.name && (
             <p className="text-red-500 mt-1">{errors.name.message}</p>
+          )}
+        </div>
+
+        {/* Company Name */}
+        <div>
+          <label className="block mb-1 font-semibold">Company Name</label>
+          <input
+            type="text"
+            placeholder="Enter company name"
+            className={`input input-bordered w-full ${
+              errors.company && "border-red-500"
+            }`}
+            {...register("company", { required: "Company name is required" })}
+          />
+          {errors.company && (
+            <p className="text-red-500 mt-1">{errors.company.message}</p>
           )}
         </div>
 

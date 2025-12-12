@@ -153,7 +153,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center hover:scale-105 transition-transform duration-300 -ml-2"
+            className="flex items-center hover:scale-105 transition-transform duration-300 md:-ml-6 -ml-3"
           >
             <img
               src={Img}
